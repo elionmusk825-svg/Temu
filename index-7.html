@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ff5a00">
+<meta name="description" content="TEMU Marketplace demo — fashion, electronics, automotive, home, beauty, accessories and more.">
+<title>TEMU Marketplace</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f6f6f6;color:#222}
+header{background:#ff5a00;color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px #0002}
+.top{max-width:1250px;margin:auto;padding:12px 16px;display:flex;gap:16px;align-items:center}
+.logo{font-size:30px;font-weight:900;letter-spacing:-1px;white-space:nowrap}
+.search{flex:1;display:flex;background:#fff;border-radius:7px;overflow:hidden}
+.search input{border:0;outline:0;padding:13px;width:100%;font-size:15px}
+.search button{border:0;background:#222;color:#fff;padding:0 20px;font-weight:700}
+.iconbtn{background:#fff;color:#222;border:0;border-radius:7px;padding:11px 13px;font-weight:700;cursor:pointer}
+nav{background:#fff;color:#333;overflow:auto;white-space:nowrap;border-bottom:1px solid #ddd}
+.navin{max-width:1250px;margin:auto;display:flex;gap:7px;padding:8px 12px}
+.navin button{border:0;background:#f3f3f3;border-radius:18px;padding:8px 13px;cursor:pointer}
+.navin button:hover{background:#ffe1d3}
+.hero{max-width:1250px;margin:18px auto;padding:28px 22px;border-radius:14px;background:linear-gradient(120deg,#ff5a00,#ff8a00 55%,#ffd3bb);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.hero h1{font-size:clamp(30px,5vw,55px);margin:0 0 8px}.hero p{font-size:17px;max-width:650px}
+.hero .badge{background:#fff;color:#ff5a00;padding:12px 18px;border-radius:25px;font-weight:900;white-space:nowrap}
+.wrap{max-width:1250px;margin:auto;padding:0 12px 40px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.toolbar select{padding:10px;border:1px solid #ccc;border-radius:7px;background:#fff}
+.count{margin-left:auto;color:#666}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px #0001;transition:.15s;position:relative}
+.card:hover{transform:translateY(-2px);box-shadow:0 5px 18px #0002}
+.pic{width:100%;height:180px;object-fit:cover;background:#eee}
+.info{padding:11px}.title{font-size:14px;line-height:1.3;min-height:37px}
+.price{font-size:20px;font-weight:900;color:#e54800;margin-top:6px}
+.old{text-decoration:line-through;color:#999;font-size:12px;margin-left:5px}
+.rating{color:#f59e0b;font-size:13px;margin:4px 0}.seller{font-size:11px;color:#777}
+.add{width:100%;border:0;background:#ff5a00;color:#fff;padding:10px;border-radius:6px;font-weight:800;cursor:pointer;margin-top:8px}
+.tag{position:absolute;top:8px;left:8px;background:#e53935;color:#fff;border-radius:4px;padding:4px 6px;font-size:11px;font-weight:800}
+.empty{text-align:center;padding:50px;color:#777;grid-column:1/-1}
+footer{background:#222;color:#ddd;padding:30px 15px;text-align:center}
+.drawer{position:fixed;right:-420px;top:0;width:min(410px,95vw);height:100%;background:#fff;z-index:50;box-shadow:-5px 0 20px #0003;transition:.25s;padding:18px;overflow:auto}
+.drawer.open{right:0}.drawer h2{margin-top:0}.close{float:right;border:0;background:#eee;padding:8px;border-radius:5px}
+.cartitem{display:flex;gap:10px;border-bottom:1px solid #ddd;padding:10px 0}.cartitem img{width:65px;height:65px;object-fit:cover;border-radius:6px}.cartitem b{display:block}
+.total{font-size:22px;font-weight:900;margin:20px 0}.checkout{width:100%;padding:13px;border:0;background:#111;color:#fff;border-radius:7px;font-weight:800}
+@media(max-width:650px){.logo{font-size:24px}.top{gap:7px}.hero{margin:10px 8px}.hero .badge{display:none}.grid{grid-template-columns:repeat(2,1fr);gap:9px}.pic{height:145px}.count{width:100%;margin-left:0}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="logo">TEMU</div>
+    <div class="search"><input id="search" placeholder="Search shoes, phones, cars, engines, clothes..."><button onclick="render()">Search</button></div>
+    <button class="iconbtn" onclick="openCart()">🛒 <span id="cartCount">0</span></button>
+  </div>
+</header>
+
+<nav><div class="navin" id="cats"></div></nav>
+
+<section class="hero">
+  <div><h1>Shop Everything You Love</h1><p>Fashion, electronics, beauty, home, automotive parts, lighting, accessories, sports gear and more — all in one marketplace demo.</p></div>
+  <div class="badge">DAILY DEALS</div>
+</section>
+
+<main class="wrap">
+  <div class="toolbar">
+    <select id="sort" onchange="render()">
+      <option value="featured">Featured</option><option value="low">Price: Low to High</option>
+      <option value="high">Price: High to Low</option><option value="rating">Top Rated</option>
+    </select>
+    <select id="sellerFilter" onchange="render()"><option value="all">All Sellers</option><option value="verified">Verified Sellers</option></select>
+    <span class="count" id="count"></span>
+  </div>
+  <section class="grid" id="grid"></section>
+</main>
+
+<div class="drawer" id="drawer">
+  <button class="close" onclick="closeCart()">✕</button><h2>Your Cart</h2>
+  <div id="cartItems"></div><div class="total" id="total">Total: ₦0</div>
+  <button class="checkout" onclick="alert('Demo checkout: connect your preferred payment gateway here.')">Proceed to Checkout</button>
+</div>
+
+<footer><b>TEMU Marketplace Demo</b><br><br>Products, prices, sellers and images on this demo are sample data. Expand the catalog and connect your own seller, inventory and payment systems before launching.</footer>
+
+<script>
+const img = q => `https://images.unsplash.com/${q}?auto=format&fit=crop&w=700&q=80`;
+const products = [
+["Women's Casual Sneakers","Shoes","₦28,500","photo-1542291026-7eec264c27ff","4.8","UrbanStep Store"],
+["Men's Running Shoes","Shoes","₦32,000","photo-1542291026-7eec264c27ff","4.7","SportPro"],
+["Leather Chelsea Boots","Boots","₦45,000","photo-1520256862855-398228c41684","4.6","Prime Leather"],
+["Women's Fashion Handbag","Bags","₦22,500","photo-1584917865442-de89df76afd3","4.9","Luxe Bag House"],
+["Travel Backpack","Bags","₦19,900","photo-1553062407-98eeb64c6a62","4.7","TravelHub"],
+["Classic Sunglasses","Sunglasses","₦9,500","photo-1511499767150-a48a237f0083","4.5","Shade World"],
+["Summer Swimwear","Swimwear","₦18,000","photo-1544966503-7cc5ac882d5f","4.6","SummerStyle"],
+["Women's Casual Dress","Women","₦25,000","photo-1515886657613-9f3515b0c78f","4.8","Fashion Avenue"],
+["Men's Casual Shirt","Men","₦16,500","photo-1596755094514-f87e34085b2c","4.7","Gentleman Hub"],
+["Women's Jacket","Women","₦34,000","photo-1544022613-e87ca75a784a","4.6","Style Corner"],
+["Men's Denim Jacket","Men","₦29,000","photo-1527010154944-f22498b3aedd","4.7","Urban Men"],
+["Cotton T-Shirt","Clothes","₦8,900","photo-1521572163474-6864f9cf17ab","4.8","Basic Wear"],
+["Comfort Underwear Pack","Clothes","₦12,500","photo-1596755389378-c31d21fd1273","4.5","Everyday Essentials"],
+["Women's Tights","Clothes","₦7,500","photo-1515886657613-9f3515b0c78f","4.4","Fashion Basics"],
+["Fashion Necklace","Accessories","₦6,800","photo-1599643478518-a784e5dc4c8f","4.8","Jewelry House"],
+["Fashion Watch","Accessories","₦21,000","photo-1524805444758-089113d48a6d","4.7","TimeZone"],
+["Phone Case","Phones","₦4,500","photo-1601593346740-925612772716","4.5","Mobile Gear"],
+["Wireless Earbuds","Electronics","₦18,900","photo-1606220945770-b5b6c2c55bf1","4.6","Tech World"],
+["Smartphone","Phones","₦185,000","photo-1511707171634-5f897ff02aa9","4.7","SmartTech"],
+["Laptop","Electronics","₦650,000","photo-1496181133206-80ce9b88a853","4.8","Computer Mall"],
+["Bluetooth Speaker","Electronics","₦27,000","photo-1608043152269-423dbba4e7e1","4.6","Sound House"],
+["LED Ceiling Light","Lighting","₦23,500","photo-1524484485831-a92ffc0de03f","4.8","Bright Home"],
+["LED Strip Lights","Lighting","₦8,500","photo-1565814329452-e1efa11c5b89","4.7","Light Zone"],
+["Table Lamp","Lighting","₦14,500","photo-1507473885765-e6ed057f782c","4.7","Home Glow"],
+["Modern Sofa","Home","₦380,000","photo-1555041469-a586c61ea9bc","4.8","Home Comfort"],
+["Office Chair","Home","₦95,000","photo-1580480055273-228ff5388ef8","4.7","Office Plus"],
+["Kitchen Blender","Home","₦35,000","photo-1570222094114-d054a817e56b","4.6","Kitchen Pro"],
+["Nonstick Cookware Set","Home","₦75,000","photo-1556910103-1c02745aae4d","4.8","Chef Store"],
+["Power Bank","Electronics","₦16,000","photo-1609592424852-28f6b3c0b2e3","4.5","Power Hub"],
+["Car LED Headlights","Car Parts","₦55,000","photo-1492144534655-ae79c964c9d7","4.7","AutoLight"],
+["Car Floor Mats","Car Accessories","₦32,000","photo-1503736334956-4c8f8e92946d","4.6","AutoStyle"],
+["Car Phone Holder","Car Accessories","₦9,900","photo-1493238792000-8113da705763","4.5","Drive Gear"],
+["Engine Oil 5W-30","Car Parts","₦18,500","photo-1503376780353-7e6692767b70","4.7","AutoCare"],
+["Brake Pad Set","Car Parts","₦42,000","photo-1489824904134-891ab64532f1","4.7","BrakeWorks"],
+["Car Battery","Car Parts","₦110,000","photo-1549317661-bd32c8ce0db2","4.6","PowerAuto"],
+["Alloy Wheel Set","Car Parts","₦420,000","photo-1504215680853-026ed2a45def","4.8","Wheel Masters"],
+["Car Engine - Sample Listing","Car Engines","₦1,850,000","photo-1493238792000-8113da705763","4.5","Auto Engines"],
+["Motorcycle Engine - Sample","Car Engines","₦620,000","photo-1558981806-ec527fa84c39","4.4","MotoParts"],
+["Car Diagnostic Scanner","Car Accessories","₦65,000","photo-1449965408869-eaa3f722e40d","4.8","ScanPro"],
+["Solar Panel 400W","Electronics","₦185,000","photo-1509391366360-2e959784a276","4.7","Solar World"],
+["Rechargeable Fan","Home","₦42,000","photo-1585152968994-2c9c8e3e8a5a","4.6","CoolHome"],
+["Power Inverter","Electronics","₦175,000","photo-1473341304170-971dccb5ac1e","4.7","Energy Store"],
+["Sports Football","Sports","₦15,000","photo-1579952363873-27f3bade9f55","4.8","Sport Nation"],
+["Gym Gloves","Sports","₦8,500","photo-1583454110551-21f2fa2afe61","4.6","Fitness Hub"],
+["Yoga Mat","Sports","₦12,000","photo-1592432678016-e910b452f9a2","4.7","Active Life"],
+["Camping Tent","Outdoor","₦85,000","photo-1504280390367-361c6d9f38f4","4.7","Outdoor World"],
+["Garden Chair","Home","₦38,000","photo-1533090481720-856c6e3c1fdc","4.5","Garden Home"],
+["LED Floodlight","Lighting","₦25,000","photo-1513506003901-1e6a229e2d15","4.8","Pro Lighting"],
+["Tool Kit","Tools","₦48,000","photo-1581147036324-c1c1f1f0e9d1","4.7","ToolBox"],
+["Electric Drill","Tools","₦58,000","photo-1504148455328-c376907d081c","4.6","Builder Store"],
+["Wooden Board","Boards","₦18,000","photo-1542621334-a254cf47733d","4.4","Board House"],
+["Acrylic Display Board","Boards","₦12,500","photo-1521737711867-e3b97375f902","4.5","Display Pro"],
+["School Backpack","Bags","₦15,000","photo-1553062407-98eeb64c6a62","4.6","Student Store"],
+["Makeup Organizer","Beauty","₦11,500","photo-1596462502278-27bfdc403348","4.7","Beauty Box"],
+["Hair Dryer","Beauty","₦29,000","photo-1522337360788-8b13dee7a37e","4.6","Beauty Tech"],
+["Makeup Brush Set","Beauty","₦14,500","photo-1596462502278-27bfdc403348","4.8","Glam Store"],
+["Nail Care Kit","Beauty","₦9,000","photo-1604654894610-df63bc536371","4.7","Nail Studio"],
+["Children's Sneakers","Kids","₦18,000","photo-1514989940723-e8e87f782d5a","4.6","Kids Fashion"],
+["Kids Hoodie","Kids","₦13,500","photo-1519238263530-99bdd11df2ea","4.6","Little Style"],
+["Baby Stroller","Kids","₦95,000","photo-1596464716127-f2a82984de30","4.7","Baby World"],
+["Pet Bed","Pets","₦24,000","photo-1586671267731-da2cf3ceeb80","4.6","Pet Home"],
+["Dog Collar","Pets","₦6,500","photo-1558788353-f76d92427f16","4.7","Pet Gear"],
+["Travel Suitcase","Travel","₦75,000","photo-1565026057447-bc90a3dceb87","4.8","Travel Pro"],
+["Water Bottle","Sports","₦7,500","photo-1602143407151-7111542de6e8","4.7","Hydrate"],
+["Smart Home Camera","Electronics","₦42,000","photo-1558008258-3256797b43f3","4.6","SafeHome"],
+["Wi-Fi Router","Electronics","₦35,000","photo-1606904825846-647eb07f5be2","4.5","NetStore"],
+["Gaming Controller","Gaming","₦27,000","photo-1592840496694-26d035b52b48","4.8","Game Zone"],
+["Gaming Headset","Gaming","₦32,000","photo-1599669454699-248893623440","4.7","Game Zone"],
+["Mechanical Keyboard","Gaming","₦45,000","photo-1587829741301-dc798b83add3","4.8","PC Gaming"],
+["USB Desk Fan","Electronics","₦9,500","photo-1585152968994-2c9c8e3e8a5a","4.4","DeskTech"],
+["Wall Clock","Home","₦16,000","photo-1563861826100-9cb868fdbe1c","4.6","Home Decor"],
+["Curtains Set","Home","₦28,000","photo-1618220179428-22790b461013","4.5","Decor House"],
+["Bedsheet Set","Home","₦24,000","photo-1584100936595-c0654b55a2e2","4.7","Sleep Store"],
+["Pillow Set","Home","₦15,000","photo-1584100936595-c0654b55a2e2","4.6","Sleep Store"],
+["Men's Belt","Accessories","₦8,000","photo-1624222247344-550fb60583dc","4.7","Leather Works"],
+["Wallet","Accessories","₦10,500","photo-1627123424574-724758594e93","4.8","Leather Works"],
+["Travel Sunglasses","Sunglasses","₦12,500","photo-1511499767150-a48a237f0083","4.6","Shade World"],
+["Women's Boots","Boots","₦38,000","photo-1543163521-1bf539c55dd2","4.7","Shoe Avenue"],
+["Men's Formal Shoes","Shoes","₦35,000","photo-1614252369475-531eba835eb1","4.7","Gentleman Shoes"],
+["Running Shorts","Clothes","₦11,000","photo-1552902865-b72c031ac5ea","4.6","SportPro"],
+["Hoodie","Clothes","₦19,000","photo-1556821840-3a63f95609a7","4.8","Streetwear Hub"],
+["Jeans","Clothes","₦22,000","photo-1542272604-787c3835535d","4.7","Denim House"],
+["Rain Jacket","Outdoor","₦27,000","photo-1544966503-7cc5ac882d5f","4.5","Outdoor World"],
+["Car Roof Rack","Car Accessories","₦95,000","photo-1503736334956-4c8f8e92946d","4.5","AutoCarry"],
+["Car Air Compressor","Car Accessories","₦45,000","photo-1492144534655-ae79c964c9d7","4.6","Drive Gear"],
+["Spark Plug Set","Car Parts","₦14,000","photo-1489824904134-891ab64532f1","4.7","AutoCare"],
+["Radiator","Car Parts","₦145,000","photo-1493238792000-8113da705763","4.5","Cooling Pro"],
+["Alternator","Car Parts","₦125,000","photo-1492144534655-ae79c964c9d7","4.6","Auto Electrics"],
+["Car Seat Covers","Car Accessories","₦55,000","photo-1503736334956-4c8f8e92946d","4.7","AutoStyle"],
+["LED Panel Light","Lighting","₦17,000","photo-1524484485831-a92ffc0de03f","4.8","Bright Home"],
+["Pendant Light","Lighting","₦35,000","photo-1507473885765-e6ed057f782c","4.6","Light Zone"],
+["Outdoor Solar Light","Lighting","₦22,000","photo-1473341304170-971dccb5ac1e","4.7","Solar World"],
+["Bluetooth Keyboard","Electronics","₦22,000","photo-1587829741301-dc798b83add3","4.6","Tech World"],
+["Tablet","Electronics","₦155,000","photo-1544244015-0df4b3ffc6b0","4.7","SmartTech"],
+["Smartwatch","Accessories","₦48,000","photo-1523275335684-37898b6baf30","4.7","TimeZone"],
+["Fitness Tracker","Sports","₦26,000","photo-1556742049-0cfed4f6a45d","4.5","Active Life"],
+["Camera Tripod","Electronics","₦18,500","photo-1495704907664-81f74a7c3c0f","4.6","Photo Pro"],
+["Digital Camera","Electronics","₦520,000","photo-1516035069371-29a1b244cc32","4.8","Photo Pro"],
+["Drone","Electronics","₦280,000","photo-1473968512647-3e447244af8f","4.7","SkyTech"]
+];
+
+const categories=["All","Shoes","Boots","Bags","Sunglasses","Swimwear","Men","Women","Clothes","Accessories","Phones","Electronics","Lighting","Home","Car Parts","Car Engines","Car Accessories","Boards","Sports","Beauty","Kids","Pets","Travel","Tools","Gaming","Outdoor"];
+const cats=document.getElementById("cats");
+categories.forEach(c=>{let b=document.createElement("button");b.textContent=c;b.onclick=()=>{document.querySelectorAll(".navin button").forEach(x=>x.style.fontWeight="400");b.style.fontWeight="900";currentCat=c;render()};cats.appendChild(b)});
+let currentCat="All", cart=[];
+function money(s){return Number(s.replace(/[^\d]/g,""))}
+function render(){
+ let q=document.getElementById("search").value.toLowerCase(), sort=document.getElementById("sort").value, seller=document.getElementById("sellerFilter").value;
+ let a=products.map((p,i)=>({...p,i})).filter(p=>(currentCat==="All"||p[1]===currentCat)&&(!q||p[0].toLowerCase().includes(q)||p[1].toLowerCase().includes(q)||p[6].toLowerCase().includes(q))&&(seller==="all"||Number(p[5])>=4.7));
+ if(sort==="low")a.sort((x,y)=>money(x[2])-money(y[2])); if(sort==="high")a.sort((x,y)=>money(y[2])-money(x[2])); if(sort==="rating")a.sort((x,y)=>Number(y[5])-Number(x[5]));
+ document.getElementById("count").textContent=a.length+" products";
+ document.getElementById("grid").innerHTML=a.length?a.map(p=>`<article class="card"><span class="tag">DEAL</span><img class="pic" loading="lazy" src="${img(p[3])}" alt="${p[0]}"><div class="info"><div class="title">${p[0]}</div><div class="price">${p[2]} <span class="old">₦${Math.round(money(p[2])*1.2).toLocaleString()}</span></div><div class="rating">★ ${p[5]} · ${p[6]}</div><div class="seller">✓ ${p[6]} · Verified seller</div><button class="add" onclick="addCart(${p.i})">Add to Cart</button></div></article>`).join(""):`<div class="empty">No products found. Try another search or category.</div>`;
+}
+function addCart(i){cart.push(i);document.getElementById("cartCount").textContent=cart.length;openCart()}
+function openCart(){document.getElementById("drawer").classList.add("open");let c=document.getElementById("cartItems"),total=0;c.innerHTML=cart.map(i=>{let p=products[i];total+=money(p[2]);return `<div class="cartitem"><img src="${img(p[3])}"><div><b>${p[0]}</b>${p[2]}<br><button onclick="cart.splice(${cart.indexOf(i)},1);openCart()">Remove</button></div></div>`}).join("")||"<p>Your cart is empty.</p>";document.getElementById("total").textContent="Total: ₦"+total.toLocaleString()}
+function closeCart(){document.getElementById("drawer").classList.remove("open")}
+document.getElementById("search").addEventListener("keydown",e=>{if(e.key==="Enter")render()});
+render();
+</script>
+</body>
+</html>
