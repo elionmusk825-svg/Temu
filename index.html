@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>APEX — Where Ideas Become Income</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#070b14;
+  color:white;
+}
+
+nav{
+  height:70px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:0 5%;
+  border-bottom:1px solid #223047;
+  background:#070b14;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:2px;
+  white-space:nowrap;
+}
+
+.logo span{
+  color:#4da3ff;
+}
+
+.search{
+  flex:1;
+  max-width:520px;
+  background:#101827;
+  border:1px solid #26354b;
+  color:white;
+  padding:12px 15px;
+  border-radius:12px;
+  outline:none;
+}
+
+nav a{
+  color:#aeb9c8;
+  text-decoration:none;
+}
+
+.nav-btn{
+  background:white;
+  color:#07101e!important;
+  padding:10px 15px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.hero{
+  text-align:center;
+  padding:80px 5%;
+  background:
+  radial-gradient(circle at center top,#12366a,#070b14 65%);
+}
+
+.badge{
+  display:inline-block;
+  border:1px solid #315887;
+  background:#0d1c31;
+  color:#9dceff;
+  padding:8px 14px;
+  border-radius:30px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.hero h1{
+  font-size:clamp(42px,8vw,82px);
+  max-width:900px;
+  margin:25px auto 20px;
+  line-height:.98;
+  letter-spacing:-3px;
+}
+
+.hero p{
+  max-width:650px;
+  margin:auto;
+  color:#9ba8ba;
+  font-size:18px;
+  line-height:1.6;
+}
+
+.buttons{
+  margin-top:30px;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:14px 22px;
+  border-radius:12px;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.primary{
+  background:#4da3ff;
+  color:#06101d;
+}
+
+.secondary{
+  background:#101827;
+  border:1px solid #26354b;
+  color:white;
+}
+
+.section{
+  padding:40px 5%;
+}
+
+.section h2{
+  margin-bottom:20px;
+  font-size:28px;
+}
+
+.categories{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+}
+
+.category{
+  background:#101827;
+  border:1px solid #26354b;
+  color:white;
+  padding:10px 17px;
+  border-radius:30px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.category.active{
+  background:#1769ff;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(210px,1fr));
+  gap:18px;
+}
+
+.product{
+  background:#101827;
+  border:1px solid #223047;
+  border-radius:17px;
+  overflow:hidden;
+}
+
+.product-image{
+  height:170px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:60px;
+  background:linear-gradient(135deg,#182b45,#0e1726);
+}
+
+.product-info{
+  padding:16px;
+}
+
+.tag{
+  color:#83bdf3;
+  font-size:11px;
+  font-weight:bold;
+  text-transform:uppercase;
+}
+
+.product h3{
+  margin:8px 0;
+}
+
+.price{
+  font-size:20px;
+  font-weight:900;
+}
+
+.seller{
+  color:#9ba8ba;
+  font-size:13px;
+  margin:8px 0 14px;
+}
+
+.buy{
+  width:100%;
+  padding:11px;
+  background:white;
+  color:#07101e;
+  border:0;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.creators{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+
+.creator{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:16px;
+  background:#101827;
+  border:1px solid #223047;
+  border-radius:15px;
+}
+
+.avatar{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#1769ff;
+  font-weight:bold;
+}
+
+.creator small{
+  color:#9ba8ba;
+}
+
+.sell{
+  background:linear-gradient(120deg,#112b4c,#0d1625);
+  border:1px solid #25486f;
+  border-radius:22px;
+  padding:35px;
+  text-align:center;
+}
+
+.sell p{
+  color:#9ba8ba;
+  margin:12px auto 22px;
+  max-width:600px;
+}
+
+footer{
+  padding:35px 5%;
+  border-top:1px solid #223047;
+  color:#9ba8ba;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:15px;
+}
+
+.cart{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:#4da3ff;
+  color:#06101d;
+  padding:14px 20px;
+  border-radius:30px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 10px 30px #0008;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:80px;
+  transform:translateX(-50%);
+  background:white;
+  color:#07101e;
+  padding:13px 20px;
+  border-radius:10px;
+  font-weight:bold;
+  display:none;
+  z-index:200;
+}
+
+@media(max-width:650px){
+
+  nav{
+    padding:0 4%;
+  }
+
+  nav a{
+    display:none;
+  }
+
+  .hero{
+    padding:60px 5%;
+  }
+
+  .hero h1{
+    font-size:48px;
+  }
+
+  .section{
+    padding:30px 4%;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+
+  <div class="logo">
+    <span>▲</span> APEX
+  </div>
+
+  <input
+    id="search"
+    class="search"
+    placeholder="Search products, services and creators..."
+    oninput="renderProducts()"
+  >
+
+  <a href="#market">Market</a>
+
+  <a href="#creators">Creators</a>
+
+  <a class="nav-btn" href="#sell">
+    Start Selling
+  </a>
+
+</nav>
+
+
+<section class="hero">
+
+  <span class="badge">
+    THE NEW DIGITAL ECONOMY
+  </span>
+
+  <h1>
+    Turn your idea into something bigger.
+  </h1>
+
+  <p>
+    Discover products, services and creators.
+    Build your profile. Sell what you know.
+    Grow on APEX.
+  </p>
+
+  <div class="buttons">
+
+    <button
+      class="btn primary"
+      onclick="goMarket()"
+    >
+      Explore Apex
+    </button>
+
+    <button
+      class="btn secondary"
+      onclick="goSell()"
+    >
+      Start Selling
+    </button>
+
+  </div>
+
+</section>
+
+
+<section class="section" id="market">
+
+  <h2>
+    Explore the Apex Market
+  </h2>
+
+  <div class="categories">
+
+    <button
+      class="category active"
+      onclick="setCategory('All',this)"
+    >
+      All
+    </button>
+
+    <button
+      class="category"
+      onclick="setCategory('Tech',this)"
+    >
+      Tech
+    </button>
+
+    <button
+      class="category"
+      onclick="setCategory('Design',this)"
+    >
+      Design
+    </button>
+
+    <button
+      class="category"
+      onclick="setCategory('Digital',this)"
+    >
+      Digital
+    </button>
+
+    <button
+      class="category"
+      onclick="setCategory('Services',this)"
+    >
+      Services
+    </button>
+
+    <button
+      class="category"
+      onclick="setCategory('Fashion',this)"
+    >
+      Fashion
+    </button>
+
+  </div>
+
+  <br>
+
+  <div
+    class="products"
+    id="products"
+  ></div>
+
+</section>
+
+
+<section class="section" id="creators">
+
+  <h2>
+    Creators to Discover
+  </h2>
+
+  <div class="creators">
+
+    <div class="creator">
+      <div class="avatar">CO</div>
+
+      <div>
+        <b>Chinotech One</b>
+        <br>
+        <small>Web & Arduino Creator · ⭐ 4.9</small>
+      </div>
+    </div>
+
+    <div class="creator">
+      <div class="avatar">AD</div>
+
+      <div>
+        <b>Apex Designs</b>
+        <br>
+        <small>Brand Designer · ⭐ 5.0</small>
+      </div>
+    </div>
+
+    <div class="creator">
+      <div class="avatar">DM</div>
+
+      <div>
+        <b>Digital Mike</b>
+        <br>
+        <small>Digital Products · ⭐ 4.8</small>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="section" id="sell">
+
+  <div class="sell">
+
+    <h2>
+      Have something valuable?
+    </h2>
+
+    <p>
+      Join Apex as a seller and put your
+      product, service or digital skill
+      in front of new customers.
+    </p>
+
+    <button
+      class="btn primary"
+      onclick="checkout()"
+    >
+      Sell on Apex
+    </button>
+
+  </div>
+
+</section>
+
+
+<footer>
+
+  <b>▲ APEX</b>
+
+  <span>
+    Where Ideas Become Income
+  </span>
+
+  <span>
+    © 2026 Apex
+  </span>
+
+</footer>
+
+
+<div
+  class="cart"
+  onclick="checkout()"
+>
+  🛒 Checkout
+  <span id="cartCount">0</span>
+</div>
+
+
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
+<script>
+
+/* YOUR APEX PAYSTACK CHECKOUT */
+
+const PAYSTACK_LINK =
+"https://paystack.shop/pay/kkof1e1670";
+
+
+/* PRODUCTS */
+
+const products = [
+
+  {
+    name:"Wireless Smart Watch",
+    category:"Tech",
+    price:18500,
+    image:"⌚",
+    seller:"Apex Gadgets"
+  },
+
+  {
+    name:"Premium Logo Design",
+    category:"Design",
+    price:12000,
+    image:"🎨",
+    seller:"Apex Designs"
+  },
+
+  {
+    name:"Arduino Programming Service",
+    category:"Services",
+    price:25000,
+    image:"🤖",
+    seller:"Chinotech One"
+  },
+
+  {
+    name:"Social Media Starter Kit",
+    category:"Digital",
+    price:8500,
+    image:"📱",
+    seller:"Digital Mike"
+  },
+
+  {
+    name:"USB-C Fast Charger",
+    category:"Tech",
+    price:9500,
+    image:"🔌",
+    seller:"Apex Gadgets"
+  },
+
+  {
+    name:"Business Flyer Template",
+    category:"Design",
+    price:5000,
+    image:"🖼️",
+    seller:"Apex Designs"
+  },
+
+  {
+    name:"Beginner Coding Guide",
+    category:"Digital",
+    price:7000,
+    image:"💻",
+    seller:"CodeLab"
+  },
+
+  {
+    name:"Classic Streetwear Hoodie",
+    category:"Fashion",
+    price:22000,
+    image:"👕",
+    seller:"Apex Wear"
+  }
+
+];
+
+
+let currentCategory = "All";
+let cartCount = 0;
+
+
+/* MONEY */
+
+function formatMoney(amount){
+
+  return "₦" +
+  amount.toLocaleString("en-NG");
+
+}
+
+
+/* PRODUCTS */
+
+function renderProducts(){
+
+  const search =
+  document
+  .getElementById("search")
+  .value
+  .toLowerCase();
+
+  const filtered =
+  products.filter(product => {
+
+    const categoryMatch =
+    currentCategory === "All" ||
+    product.category === currentCategory;
+
+    const text =
+    product.name +
+    " " +
+    product.seller +
+    " " +
+    product.category;
+
+    return categoryMatch &&
+    text.toLowerCase().includes(search);
+
+  });
+
+
+  const container =
+  document.getElementById("products");
+
+
+  if(filtered.length === 0){
+
+    container.innerHTML =
+    "<p style='color:#9ba8ba'>No Apex products found.</p>";
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+  filtered.map(product => `
+
+    <article class="product">
+
+      <div class="product-image">
+        ${product.image}
+      </div>
+
+      <div class="product-info">
+
+        <div class="tag">
+          ${product.category}
+        </div>
+
+        <h3>
+          ${product.name}
+        </h3>
+
+        <div class="price">
+          ${formatMoney(product.price)}
+        </div>
+
+        <div class="seller">
+          by ${product.seller}
+        </div>
+
+        <button
+          class="buy"
+          onclick="addToCart('${product.name}')"
+        >
+          Add to Cart
+        </button>
+
+      </div>
+
+    </article>
+
+  `).join("");
+
+}
+
+
+/* CATEGORY */
+
+function setCategory(category,button){
+
+  currentCategory = category;
+
+  document
+  .querySelectorAll(".category")
+  .forEach(item => {
+    item.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  renderProducts();
+
+}
+
+
+/* CART */
+
+function addToCart(product){
+
+  cartCount++;
+
+  document
+  .getElementById("cartCount")
+  .textContent = cartCount;
+
+  showToast(
+    product + " added to your cart."
+  );
+
+}
+
+
+/* PAYSTACK CHECKOUT */
+
+function checkout(){
+
+  window.location.href =
+  PAYSTACK_LINK;
+
+}
+
+
+/* HERO BUTTONS */
+
+function goMarket(){
+
+  document
+  .getElementById("market")
+  .scrollIntoView({
+    behavior:"smooth"
+  });
+
+}
+
+
+function goSell(){
+
+  document
+  .getElementById("sell")
+  .scrollIntoView({
+    behavior:"smooth"
+  });
+
+}
+
+
+/* TOAST */
+
+function showToast(message){
+
+  const toast =
+  document.getElementById("toast");
+
+  toast.textContent = message;
+
+  toast.style.display = "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+  setTimeout(() => {
+
+    toast.style.display = "none";
+
+  },2200);
+
+}
+
+
+/* START */
+
+renderProducts();
+
+</script>
+
+</body>
+</html>
