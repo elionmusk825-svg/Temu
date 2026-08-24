@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>APEX — Your Life. Your People. Your World.</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f3f4f6;
+  color:#17191f;
+}
+
+button,input,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  border:0;
+}
+
+/* TOP BAR */
+
+.topbar{
+  height:65px;
+  background:white;
+  border-bottom:1px solid #ddd;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:0 20px;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:900;
+  color:#ff5a1f;
+  letter-spacing:-1px;
+}
+
+.search{
+  flex:1;
+  max-width:520px;
+  margin:auto;
+}
+
+.search input{
+  width:100%;
+  border:none;
+  outline:none;
+  background:#f0f1f3;
+  padding:12px 18px;
+  border-radius:25px;
+}
+
+.top-button{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#f0f1f3;
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+/* LAYOUT */
+
+.layout{
+  max-width:1250px;
+  margin:auto;
+  padding:20px;
+  display:grid;
+  grid-template-columns:220px minmax(300px,650px) 290px;
+  gap:20px;
+}
+
+/* LEFT */
+
+.sidebar{
+  position:sticky;
+  top:85px;
+  height:max-content;
+}
+
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.nav button{
+  background:transparent;
+  text-align:left;
+  padding:13px;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:#fff0e9;
+  color:#ff5a1f;
+}
+
+.create{
+  width:100%;
+  padding:13px;
+  background:#ff5a1f;
+  color:white;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+/* CARDS */
+
+.card{
+  background:white;
+  border:1px solid #e3e4e7;
+  border-radius:17px;
+  margin-bottom:15px;
+  overflow:hidden;
+}
+
+/* STORIES */
+
+.stories{
+  display:flex;
+  gap:13px;
+  padding:14px;
+  overflow-x:auto;
+}
+
+.story{
+  min-width:70px;
+  text-align:center;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.story img{
+  width:60px;
+  height:60px;
+  object-fit:cover;
+  border-radius:50%;
+  border:3px solid #ff5a1f;
+  padding:2px;
+}
+
+/* CREATE POST */
+
+.composer{
+  padding:15px;
+}
+
+.compose-row{
+  display:flex;
+  gap:10px;
+}
+
+.composer textarea{
+  flex:1;
+  min-height:50px;
+  border:0;
+  outline:none;
+  background:#f0f1f3;
+  border-radius:18px;
+  padding:13px;
+  resize:none;
+}
+
+.compose-tools{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+}
+
+.tool{
+  background:#fff0e9;
+  color:#ff5a1f;
+  padding:9px 12px;
+  border-radius:9px;
+  font-weight:bold;
+}
+
+/* POSTS */
+
+.post{
+  padding:15px;
+}
+
+.post-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.post-head img{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.name{
+  font-weight:800;
+}
+
+.meta{
+  color:#777;
+  font-size:12px;
+}
+
+.follow{
+  margin-left:auto;
+  background:#17191f;
+  color:white;
+  padding:7px 11px;
+  border-radius:9px;
+  font-weight:bold;
+}
+
+.post-text{
+  padding:13px 0;
+  line-height:1.55;
+}
+
+.post-image{
+  width:100%;
+  max-height:500px;
+  object-fit:cover;
+  border-radius:13px;
+}
+
+.actions{
+  display:flex;
+  gap:5px;
+  margin-top:10px;
+  padding-top:9px;
+  border-top:1px solid #eee;
+}
+
+.action{
+  background:transparent;
+  padding:8px 10px;
+  color:#555;
+  border-radius:9px;
+  font-weight:bold;
+}
+
+.action:hover{
+  background:#f1f1f1;
+}
+
+.liked{
+  color:#ff5a1f!important;
+}
+
+.comment-box{
+  display:none;
+  gap:7px;
+  margin-top:8px;
+}
+
+.comment-box input{
+  flex:1;
+  border:1px solid #ddd;
+  border-radius:20px;
+  padding:9px 12px;
+  outline:none;
+}
+
+.comment-box button{
+  background:#ff5a1f;
+  color:white;
+  border-radius:20px;
+  padding:8px 14px;
+}
+
+.comment{
+  background:#f1f2f4;
+  padding:9px 12px;
+  border-radius:11px;
+  margin-top:7px;
+  font-size:13px;
+}
+
+/* RIGHT SIDE */
+
+.premium{
+  background:linear-gradient(135deg,#fff3ed,#fff);
+  border:1px solid #ffd1be;
+  border-radius:17px;
+  padding:17px;
+  margin-bottom:15px;
+}
+
+.premium h3{
+  margin-bottom:7px;
+}
+
+.premium p{
+  color:#777;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.pay-button{
+  width:100%;
+  margin-top:12px;
+  background:#ff5a1f;
+  color:white;
+  padding:11px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.live{
+  background:#17191f;
+  color:white;
+  padding:17px;
+  border-radius:17px;
+  margin-bottom:15px;
+}
+
+.live b{
+  color:#ff6840;
+}
+
+.live button{
+  margin-top:12px;
+  background:#ff5a1f;
+  color:white;
+  padding:10px 13px;
+  border-radius:9px;
+  font-weight:bold;
+}
+
+.trending{
+  padding:16px;
+}
+
+.trending h3{
+  margin-bottom:8px;
+}
+
+.trend{
+  padding:11px 0;
+  border-bottom:1px solid #eee;
+}
+
+.trend small{
+  color:#777;
+}
+
+.person{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:10px 0;
+}
+
+.person img{
+  width:40px;
+  height:40px;
+  object-fit:cover;
+  border-radius:50%;
+}
+
+.person button{
+  margin-left:auto;
+  background:#17191f;
+  color:white;
+  padding:7px 9px;
+  border-radius:8px;
+  font-size:12px;
+}
+
+/* MODAL */
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  z-index:200;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.modal-box{
+  width:min(500px,100%);
+  background:white;
+  border-radius:18px;
+  padding:20px;
+}
+
+.modal-box textarea,
+.modal-box input{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  margin:10px 0;
+  outline:none;
+}
+
+.modal-post{
+  width:100%;
+  background:#ff5a1f;
+  color:white;
+  padding:12px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.close{
+  float:right;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  transform:translateX(-50%);
+  background:#17191f;
+  color:white;
+  padding:12px 18px;
+  border-radius:25px;
+  display:none;
+  z-index:300;
+}
+
+/* MOBILE */
+
+.mobile-nav{
+  display:none;
+}
+
+@media(max-width:900px){
+
+  .layout{
+    grid-template-columns:1fr;
+    max-width:680px;
+    padding:10px;
+    padding-bottom:80px;
+  }
+
+  .sidebar,
+  .rightbar{
+    display:none;
+  }
+
+  .mobile-nav{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:62px;
+    background:white;
+    border-top:1px solid #ddd;
+    z-index:150;
+    justify-content:space-around;
+    align-items:center;
+  }
+
+  .mobile-nav button{
+    background:transparent;
+    font-size:18px;
+  }
+
+  .mobile-nav small{
+    display:block;
+    font-size:9px;
+  }
+
+  .topbar{
+    padding:0 10px;
+  }
+
+  .top-button{
+    display:none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP -->
+
+<header class="topbar">
+
+  <div class="logo">
+    APEX
+  </div>
+
+  <div class="search">
+    <input
+      id="search"
+      placeholder="Search people, posts and trends..."
+      oninput="searchPosts()"
+    >
+  </div>
+
+  <button
+    class="top-button"
+    onclick="showToast('Notifications 🔔')"
+  >
+    🔔
+  </button>
+
+  <button
+    class="top-button"
+    onclick="showToast('Messages 💬')"
+  >
+    💬
+  </button>
+
+  <img
+    class="avatar"
+    src="https://i.pravatar.cc/100?img=12"
+  >
+
+</header>
+
+
+<div class="layout">
+
+<!-- LEFT SIDEBAR -->
+
+<aside class="sidebar">
+
+  <nav class="nav">
+
+    <button class="active">
+      🏠 Home
+    </button>
+
+    <button onclick="showToast('Explore')">
+      🔎 Explore
+    </button>
+
+    <button onclick="showToast('Trending')">
+      🔥 Trending
+    </button>
+
+    <button onclick="showToast('Communities')">
+      👥 Communities
+    </button>
+
+    <button onclick="showToast('Messages')">
+      💬 Messages
+    </button>
+
+    <button onclick="showToast('Notifications')">
+      🔔 Notifications
+    </button>
+
+    <button onclick="showToast('Your profile')">
+      👤 Profile
+    </button>
+
+    <button onclick="showToast('Settings')">
+      ⚙️ Settings
+    </button>
+
+  </nav>
+
+  <br>
+
+  <button
+    class="create"
+    onclick="openCreate()"
+  >
+    ＋ Create Post
+  </button>
+
+</aside>
+
+
+<!-- MAIN FEED -->
+
+<main>
+
+  <!-- STORIES -->
+
+  <section class="card stories">
+
+    <div class="story">
+      <img src="https://i.pravatar.cc/100?img=12">
+      Your Story
+    </div>
+
+    <div class="story">
+      <img src="https://i.pravatar.cc/100?img=32">
+      Amaka
+    </div>
+
+    <div class="story">
+      <img src="https://i.pravatar.cc/100?img=13">
+      Daniel
+    </div>
+
+    <div class="story">
+      <img src="https://i.pravatar.cc/100?img=47">
+      Chika
+    </div>
+
+    <div class="story">
+      <img src="https://i.pravatar.cc/100?img=68">
+      David
+    </div>
+
+  </section>
+
+
+  <!-- CREATE -->
+
+  <section class="card composer">
+
+    <div class="compose-row">
+
+      <img
+        class="avatar"
+        src="https://i.pravatar.cc/100?img=12"
+      >
+
+      <textarea
+        id="quickPost"
+        placeholder="What's happening in your world?"
+      ></textarea>
+
+    </div>
+
+    <div class="compose-tools">
+
+      <div>
+
+        <button class="tool">
+          📸 Photo
+        </button>
+
+        <button class="tool">
+          🎥 Video
+        </button>
+
+      </div>
+
+      <button
+        class="create"
+        style="width:auto"
+        onclick="quickPost()"
+      >
+        Post
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- FEED -->
+
+  <div id="feed"></div>
+
+</main>
+
+
+<!-- RIGHT -->
+
+<aside class="rightbar">
+
+  <!-- PAYSTACK ONLY FOR APEX PREMIUM -->
+
+  <section class="premium">
+
+    <h3>
+      ⭐ APEX Premium
+    </h3>
+
+    <p>
+      Support the development of APEX.
+      Premium social features can be added
+      as APEX grows.
+    </p>
+
+    <button
+      class="pay-button"
+      onclick="checkout()"
+    >
+      Continue to Pay
+    </button>
+
+  </section>
+
+
+  <!-- LIVE -->
+
+  <section class="live">
+
+    <b>
+      🔴 APEX LIVE
+    </b>
+
+    <h3 style="margin-top:8px">
+      What's happening now?
+    </h3>
+
+    <p style="color:#bbb;margin-top:7px">
+      Discover people sharing their lives
+      in real time.
+    </p>
+
+    <button
+      onclick="showToast('APEX Live opened 🔴')"
+    >
+      Explore Live
+    </button>
+
+  </section>
+
+
+  <!-- TRENDING -->
+
+  <section class="card trending">
+
+    <h3>
+      🔥 Trending
+    </h3>
+
+    <div class="trend">
+      <b>#APEXLaunch</b>
+      <br>
+      <small>
+        12.8K posts
+      </small>
+    </div>
+
+    <div class="trend">
+      <b>#DailyLife</b>
+      <br>
+      <small>
+        8.4K posts
+      </small>
+    </div>
+
+    <div class="trend">
+      <b>#NigeriaTech</b>
+      <br>
+      <small>
+        6.9K posts
+      </small>
+    </div>
+
+    <div class="trend">
+      <b>#WeekendVibes</b>
+      <br>
+      <small>
+        4.1K posts
+      </small>
+    </div>
+
+  </section>
+
+
+  <!-- PEOPLE -->
+
+  <section class="card trending">
+
+    <h3>
+      People to follow
+    </h3>
+
+    <div class="person">
+
+      <img src="https://i.pravatar.cc/100?img=49">
+
+      <b>
+        Michael
+      </b>
+
+      <button onclick="follow(this)">
+        Follow
+      </button>
+
+    </div>
+
+    <div class="person">
+
+      <img src="https://i.pravatar.cc/100?img=44">
+
+      <b>
+        Sarah
+      </b>
+
+      <button onclick="follow(this)">
+        Follow
+      </button>
+
+    </div>
+
+    <div class="person">
+
+      <img src="https://i.pravatar.cc/100?img=33">
+
+      <b>
+        Emeka
+      </b>
+
+      <button onclick="follow(this)">
+        Follow
+      </button>
+
+    </div>
+
+  </section>
+
+</aside>
+
+</div>
+
+
+<!-- MOBILE NAV -->
+
+<nav class="mobile-nav">
+
+  <button>
+    🏠
+    <small>Home</small>
+  </button>
+
+  <button onclick="showToast('Explore')">
+    🔎
+    <small>Explore</small>
+  </button>
+
+  <button onclick="openCreate()">
+    ➕
+    <small>Create</small>
+  </button>
+
+  <button onclick="showToast('Messages')">
+    💬
+    <small>Chat</small>
+  </button>
+
+  <button onclick="showToast('Profile')">
+    👤
+    <small>Profile</small>
+  </button>
+
+</nav>
+
+
+<!-- CREATE POST MODAL -->
+
+<div
+  class="modal"
+  id="createModal"
+>
+
+  <div class="modal-box">
+
+    <button
+      class="close"
+      onclick="closeCreate()"
+    >
+      ×
+    </button>
+
+    <h2>
+      Create an APEX Post
+    </h2>
+
+    <textarea
+      id="postText"
+      rows="5"
+      placeholder="Share your day, thought, achievement or experience..."
+    ></textarea>
+
+    <input
+      id="postImage"
+      placeholder="Optional image URL"
+    >
+
+    <button
+      class="modal-post"
+      onclick="publishPost()"
+    >
+      Post to APEX
+    </button>
+
+  </div>
+
+</div>
+
+
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
+<script>
+
+/* =========================================
+   YOUR PAYSTACK LINK
+   ========================================= */
+
+const PAYSTACK_LINK =
+"https://paystack.shop/pay/kkof1e1670";
+
+
+/* =========================================
+   SAMPLE SOCIAL POSTS
+   ========================================= */
+
+const posts = [
+
+  {
+    id:1,
+
+    name:"Amaka Okafor",
+
+    username:"@amaka",
+
+    avatar:
+    "https://i.pravatar.cc/100?img=32",
+
+    text:
+    "Beautiful day! 🌅 Just sharing a little moment from my day. What are you all doing today?",
+
+    image:
+    "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1000&q=80",
+
+    likes:342,
+
+    comments:[
+      "This is beautiful! ❤️",
+      "APEX is looking good 🔥"
+    ]
+
+  },
+
+  {
+    id:2,
+
+    name:"Daniel Tech",
+
+    username:"@danieltech",
+
+    avatar:
+    "https://i.pravatar.cc/100?img=13",
+
+    text:
+    "Working on a new project today 💻. Technology keeps giving us new ways to connect.",
+
+    image:
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80",
+
+    likes:186,
+
+    comments:[
+      "Keep building! 🚀"
+    ]
+
+  },
+
+  {
+    id:3,
+
+    name:"Chika",
+
+    username:"@chika_vibes",
+
+    avatar:
+    "https://i.pravatar.cc/100?img=47",
+
+    text:
+    "Weekend vibes are loading 😂🔥 Who else is outside today?",
+
+    image:
+    "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1000&q=80",
+
+    likes:521,
+
+    comments:[]
+
+  }
+
+];
+
+
+let nextPostId = 10;
+
+
+/* =========================================
+   PAYSTACK
+   ========================================= */
+
+function checkout(){
+
+  window.location.href =
+  PAYSTACK_LINK;
+
+}
+
+
+/* =========================================
+   SECURITY
+   ========================================= */
+
+function escapeHTML(text){
+
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================
+   RENDER FEED
+   ========================================= */
+
+function renderPosts(list = posts){
+
+  const feed =
+  document.getElementById("feed");
+
+  feed.innerHTML = "";
+
+
+  list.forEach(post => {
+
+    const article =
+    document.createElement("article");
+
+    article.className =
+    "card post";
+
+
+    article.innerHTML = `
+
+      <div class="post-head">
+
+        <img
+          src="${post.avatar}"
+        >
+
+        <div>
+
+          <div class="name">
+            ${escapeHTML(post.name)}
+          </div>
+
+          <div class="meta">
+            ${escapeHTML(post.username)}
+            · just now
+          </div>
+
+        </div>
+
+        <button
+          class="follow"
+          onclick="follow(this)"
+        >
+          Follow
+        </button>
+
+      </div>
+
+
+      <div class="post-text">
+
+        ${escapeHTML(post.text)}
+
+      </div>
+
+
+      ${
+        post.image
+        ?
+        `<img
+          class="post-image"
+          src="${post.image}"
+        >`
+        :
+        ""
+      }
+
+
+      <div class="actions">
+
+        <button
+          class="action"
+          onclick="likePost(this,${post.id})"
+        >
+          ♡
+          <span>
+            ${post.likes}
+          </span>
+        </button>
+
+
+        <button
+          class="action"
+          onclick="toggleComments(this)"
+        >
+          💬
+          <span>
+            ${post.comments.length}
+          </span>
+        </button>
+
+
+        <button
+          class="action"
+          onclick="showToast('Share options opened ↗')"
+        >
+          ↗ Share
+        </button>
+
+
+        <button
+          class="action"
+          onclick="showToast('Post saved 🔖')"
+        >
+          🔖 Save
+        </button>
+
+      </div>
+
+
+      <div class="comment-box">
+
+        <input
+          placeholder="Write a comment..."
+          onkeydown="
+          if(event.key==='Enter')
+          addComment(this,${post.id})
+          "
+        >
+
+        <button
+          onclick="
+          addComment(
+            this.previousElementSibling,
+            ${post.id}
+          )
+          "
+        >
+          Send
+        </button>
+
+      </div>
+
+
+      <div class="comments">
+
+        ${post.comments.map(comment => `
+
+          <div class="comment">
+
+            <b>
+              APEX user:
+            </b>
+
+            ${escapeHTML(comment)}
+
+          </div>
+
+        `).join("")}
+
+      </div>
+
+    `;
+
+
+    feed.appendChild(article);
+
+  });
+
+}
+
+
+/* =========================================
+   LIKE
+   ========================================= */
+
+function likePost(button,id){
+
+  const post =
+  posts.find(item => item.id === id);
+
+
+  if(button.classList.toggle("liked")){
+
+    post.likes++;
+
+  }else{
+
+    post.likes--;
+
+  }
+
+
+  button.querySelector("span")
+  .textContent =
+  post.likes;
+
+
+  button.firstChild.textContent =
+  button.classList.contains("liked")
+  ?
+  "♥ "
+  :
+  "♡ ";
+
+}
+
+
+/* =========================================
+   COMMENTS
+   ========================================= */
+
+function toggleComments(button){
+
+  const box =
+  button.parentElement
+  .nextElementSibling;
+
+
+  box.style.display =
+  box.style.display === "flex"
+  ?
+  "none"
+  :
+  "flex";
+
+}
+
+
+function addComment(input,id){
+
+  const value =
+  input.value.trim();
+
+
+  if(!value){
+
+    return;
+
+  }
+
+
+  const post =
+  posts.find(item => item.id === id);
+
+
+  post.comments.push(value);
+
+  input.value = "";
+
+  renderPosts();
+
+  showToast(
+    "Comment added 💬"
+  );
+
+}
+
+
+/* =========================================
+   FOLLOW
+   ========================================= */
+
+function follow(button){
+
+  if(button.textContent === "Follow"){
+
+    button.textContent =
+    "Following";
+
+    showToast(
+      "You are now following this person 👥"
+    );
+
+  }else{
+
+    button.textContent =
+    "Follow";
+
+    showToast(
+      "Unfollowed"
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   SEARCH
+   ========================================= */
+
+function searchPosts(){
+
+  const query =
+  document
+  .getElementById("search")
+  .value
+  .toLowerCase()
+  .trim();
+
+
+  if(!query){
+
+    renderPosts();
+
+    return;
+
+  }
+
+
+  const filtered =
+  posts.filter(post => {
+
+    const content =
+    post.name +
+    " " +
+    post.username +
+    " " +
+    post.text;
+
+
+    return content
+    .toLowerCase()
+    .includes(query);
+
+  });
+
+
+  renderPosts(filtered);
+
+}
+
+
+/* =========================================
+   QUICK POST
+   ========================================= */
+
+function quickPost(){
+
+  const text =
+  document
+  .getElementById("quickPost")
+  .value
+  .trim();
+
+
+  if(!text){
+
+    openCreate();
+
+    return;
+
+  }
+
+
+  posts.unshift({
+
+    id:nextPostId++,
+
+    name:"Chinotech",
+
+    username:"@apex_user",
+
+    avatar:
+    "https://i.pravatar.cc/100?img=12",
+
+    text:text,
+
+    image:"",
+
+    likes:0,
+
+    comments:[]
+
+  });
+
+
+  document
+  .getElementById("quickPost")
+  .value = "";
+
+
+  renderPosts();
+
+
+  showToast(
+    "Your post is now live 🚀"
+  );
+
+}
+
+
+/* =========================================
+   CREATE MODAL
+   ========================================= */
+
+function openCreate(){
+
+  document
+  .getElementById("createModal")
+  .style.display =
+  "flex";
+
+}
+
+
+function closeCreate(){
+
+  document
+  .getElementById("createModal")
+  .style.display =
+  "none";
+
+}
+
+
+function publishPost(){
+
+  const text =
+  document
+  .getElementById("postText")
+  .value
+  .trim();
+
+
+  const image =
+  document
+  .getElementById("postImage")
+  .value
+  .trim();
+
+
+  if(!text){
+
+    showToast(
+      "Write something first."
+    );
+
+    return;
+
+  }
+
+
+  posts.unshift({
+
+    id:nextPostId++,
+
+    name:"Chinotech",
+
+    username:"@apex_user",
+
+    avatar:
+    "https://i.pravatar.cc/100?img=12",
+
+    text:text,
+
+    image:image,
+
+    likes:0,
+
+    comments:[]
+
+  });
+
+
+  document
+  .getElementById("postText")
+  .value = "";
+
+
+  document
+  .getElementById("postImage")
+  .value = "";
+
+
+  closeCreate();
+
+  renderPosts();
+
+
+  showToast(
+    "Posted to APEX 🚀"
+  );
+
+}
+
+
+/* =========================================
+   TOAST
+   ========================================= */
+
+function showToast(message){
+
+  const toast =
+  document.getElementById("toast");
+
+
+  toast.textContent =
+  message;
+
+
+  toast.style.display =
+  "block";
+
+
+  clearTimeout(
+    window.toastTimer
+  );
+
+
+  window.toastTimer =
+  setTimeout(() => {
+
+    toast.style.display =
+    "none";
+
+  },1800);
+
+}
+
+
+/* =========================================
+   START
+   ========================================= */
+
+renderPosts();
+
+</script>
+
+</body>
+</html>
