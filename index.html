@@ -1,0 +1,4652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#08090c">
+<meta name="description" content="APEX — Live Your Moment">
+<title>APEX — Live Your Moment</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#08090c;
+  color:#fff;
+  overflow:hidden;
+}
+
+button,input,textarea,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  border:0;
+}
+
+button:active{
+  transform:scale(.96);
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+/* TOP */
+
+.top{
+  height:62px;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:0 18px;
+  background:#08090cee;
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid #292c34;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:-1px;
+  white-space:nowrap;
+}
+
+.logo span{
+  color:#ff5a1f;
+}
+
+.tabs{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:25px;
+}
+
+.tabs button{
+  background:none;
+  color:#999;
+  padding:20px 3px;
+  font-weight:bold;
+}
+
+.tabs button.active{
+  color:#fff;
+  border-bottom:2px solid #ff5a1f;
+}
+
+.search{
+  margin-left:auto;
+  width:240px;
+}
+
+.search input{
+  width:100%;
+  background:#1d1f25;
+  border:1px solid #30323a;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:25px;
+  outline:none;
+}
+
+.top-icon{
+  width:39px;
+  height:39px;
+  border-radius:50%;
+  background:#1d1f25;
+  color:#fff;
+}
+
+.profile{
+  width:39px;
+  height:39px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid #444;
+}
+
+/* FEED */
+
+.feed{
+  height:100vh;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  padding-top:62px;
+  scrollbar-width:none;
+}
+
+.feed::-webkit-scrollbar{
+  display:none;
+}
+
+.post{
+  height:calc(100vh - 62px);
+  min-height:580px;
+  position:relative;
+  scroll-snap-align:start;
+  display:flex;
+  justify-content:center;
+  background:#111;
+  overflow:hidden;
+}
+
+.post video,
+.post img{
+  width:100%;
+  max-width:720px;
+  height:100%;
+  object-fit:cover;
+}
+
+.post video{
+  background:#000;
+}
+
+.post:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    transparent 38%,
+    rgba(0,0,0,.94)
+  );
+  pointer-events:none;
+}
+
+/* INFO */
+
+.info{
+  position:absolute;
+  z-index:5;
+  left:max(18px,calc(50% - 330px));
+  bottom:25px;
+  width:min(510px,70%);
+  text-shadow:0 2px 8px #000;
+}
+
+.username{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.handle{
+  color:#ddd;
+  font-size:14px;
+  font-weight:normal;
+}
+
+.caption{
+  font-size:15px;
+  line-height:1.5;
+  margin-top:3px;
+}
+
+.sound{
+  margin-top:10px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+/* ACTIONS */
+
+.actions{
+  position:absolute;
+  z-index:10;
+  right:max(12px,calc(50% - 350px));
+  bottom:25px;
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+  align-items:center;
+}
+
+.creator{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid #fff;
+}
+
+.follow{
+  background:#ff5a1f;
+  color:#fff;
+  border-radius:20px;
+  padding:5px 9px;
+  font-size:11px;
+  font-weight:bold;
+  margin-top:-20px;
+}
+
+.following{
+  background:#fff;
+  color:#111;
+}
+
+.action{
+  background:none;
+  color:#fff;
+  text-align:center;
+  text-shadow:0 2px 7px #000;
+}
+
+.circle{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:#171920dd;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+}
+
+.action b{
+  display:block;
+  font-size:11px;
+  margin-top:4px;
+}
+
+.liked{
+  color:#ff5a1f!important;
+}
+
+.saved{
+  color:#ffb000!important;
+}
+
+/* CREATE */
+
+.create{
+  position:fixed;
+  z-index:60;
+  right:25px;
+  bottom:25px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:#ff5a1f;
+  color:#fff;
+  font-size:30px;
+  box-shadow:0 10px 30px #0008;
+}
+
+/* MODALS */
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#000c;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+}
+
+.box{
+  width:min(570px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#15171c;
+  border:1px solid #333640;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 25px 70px #000;
+}
+
+.close{
+  float:right;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#292c33;
+  color:#fff;
+}
+
+.box h2{
+  margin-bottom:15px;
+}
+
+.box p{
+  line-height:1.5;
+}
+
+.box textarea,
+.box input,
+.box select{
+  width:100%;
+  background:#202229;
+  color:#fff;
+  border:1px solid #363944;
+  padding:12px;
+  border-radius:11px;
+  margin:6px 0;
+  outline:none;
+}
+
+.box input[type=file]{
+  padding:10px;
+}
+
+.tools{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px 0;
+}
+
+.tool{
+  background:#292c33;
+  color:#fff;
+  padding:9px 12px;
+  border-radius:10px;
+}
+
+.primary{
+  width:100%;
+  background:#ff5a1f;
+  color:#fff;
+  padding:13px;
+  border-radius:11px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.secondary{
+  width:100%;
+  background:#292c33;
+  color:#fff;
+  padding:13px;
+  border-radius:11px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.preview{
+  width:100%;
+  max-height:300px;
+  object-fit:cover;
+  border-radius:12px;
+  display:none;
+  margin-top:8px;
+  background:#000;
+}
+
+/* COMMENTS */
+
+.comments{
+  display:none;
+  flex-direction:column;
+  position:fixed;
+  z-index:120;
+  right:0;
+  top:0;
+  bottom:0;
+  width:min(430px,100%);
+  background:#15171c;
+  border-left:1px solid #333;
+}
+
+.comment-header{
+  padding:18px;
+  border-bottom:1px solid #333;
+  font-weight:bold;
+}
+
+.comment-list{
+  flex:1;
+  overflow:auto;
+  padding:15px;
+}
+
+.comment{
+  padding:13px 0;
+  border-bottom:1px solid #292c34;
+}
+
+.comment small{
+  color:#999;
+}
+
+.comment-input{
+  display:flex;
+  gap:7px;
+  padding:12px;
+}
+
+.comment-input input{
+  flex:1;
+  background:#22242b;
+  border:0;
+  color:#fff;
+  border-radius:20px;
+  padding:10px;
+  outline:none;
+}
+
+.comment-input button{
+  background:#ff5a1f;
+  color:#fff;
+  border-radius:20px;
+  padding:9px 14px;
+}
+
+/* PROFILE */
+
+.profile-panel{
+  display:none;
+  position:fixed;
+  z-index:110;
+  right:15px;
+  top:70px;
+  width:min(350px,calc(100% - 30px));
+  background:#15171c;
+  border:1px solid #333640;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 20px 60px #000;
+}
+
+.profile-head{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+.profile-large{
+  width:65px;
+  height:65px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.profile-name{
+  font-size:19px;
+  font-weight:bold;
+}
+
+.profile-handle{
+  color:#999;
+  margin-top:4px;
+}
+
+/* DISCOVER */
+
+.discover{
+  display:none;
+  position:fixed;
+  z-index:80;
+  inset:62px 0 0;
+  background:#08090c;
+  overflow:auto;
+  padding:20px;
+}
+
+.discover h2{
+  margin-bottom:15px;
+}
+
+.discover-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+  max-width:900px;
+  margin:auto;
+}
+
+.discover-item{
+  aspect-ratio:1/1.3;
+  background:#181a20;
+  overflow:hidden;
+  position:relative;
+}
+
+.discover-item img,
+.discover-item video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* TOAST */
+
+.toast{
+  display:none;
+  position:fixed;
+  z-index:300;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#fff;
+  color:#111;
+  padding:11px 17px;
+  border-radius:25px;
+  font-weight:bold;
+  box-shadow:0 10px 30px #0008;
+  max-width:90%;
+  text-align:center;
+}
+
+/* LOADING */
+
+.loading{
+  position:fixed;
+  inset:0;
+  z-index:500;
+  background:#08090c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:15px;
+}
+
+.loading-logo{
+  font-size:42px;
+  font-weight:900;
+}
+
+.loading-logo span{
+  color:#ff5a1f;
+}
+
+.spinner{
+  width:35px;
+  height:35px;
+  border:4px solid #333;
+  border-top-color:#ff5a1f;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* MOBILE */
+
+.mobile{
+  display:none;
+}
+
+@media(max-width:700px){
+
+  .top{
+    padding:0 10px;
+  }
+
+  .search{
+    display:none;
+  }
+
+  .tabs{
+    gap:15px;
+  }
+
+  .tabs button{
+    font-size:13px;
+  }
+
+  .logo{
+    font-size:23px;
+  }
+
+  .post{
+    height:calc(100vh - 62px);
+  }
+
+  .info{
+    left:14px;
+    bottom:80px;
+    width:72%;
+  }
+
+  .actions{
+    right:10px;
+    bottom:80px;
+  }
+
+  .create{
+    right:16px;
+    bottom:75px;
+  }
+
+  .mobile{
+    position:fixed;
+    display:flex;
+    z-index:55;
+    bottom:0;
+    left:0;
+    right:0;
+    height:60px;
+    background:#090a0d;
+    border-top:1px solid #292c34;
+    justify-content:space-around;
+    align-items:center;
+  }
+
+  .mobile button{
+    background:none;
+    color:#fff;
+    font-size:18px;
+  }
+
+  .mobile small{
+    display:block;
+    font-size:9px;
+  }
+
+  .discover{
+    bottom:60px;
+  }
+
+  .discover-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOADING -->
+
+<div class="loading" id="loading">
+
+  <div class="loading-logo">
+    <span>◆</span> APEX
+  </div>
+
+  <div class="spinner"></div>
+
+  <div style="color:#888">
+    Loading your world...
+  </div>
+
+</div>
+
+
+<!-- TOP BAR -->
+
+<header class="top">
+
+  <div class="logo">
+    <span>◆</span> APEX
+  </div>
+
+  <div class="tabs">
+
+    <button
+      id="forYouTab"
+      class="active"
+      onclick="changeFeed(this,'forYou')">
+      For You
+    </button>
+
+    <button
+      id="followingTab"
+      onclick="changeFeed(this,'following')">
+      Following
+    </button>
+
+    <button onclick="showLive()">
+      LIVE
+    </button>
+
+  </div>
+
+  <div class="search">
+
+    <input
+      id="search"
+      placeholder="Search APEX"
+      oninput="searchPosts()">
+
+  </div>
+
+  <button
+    class="top-icon"
+    onclick="openInbox()">
+    ✉
+  </button>
+
+  <img
+    class="profile"
+    id="profileAvatar"
+    onclick="toggleProfile()"
+    src="https://i.pravatar.cc/100?img=12"
+    alt="Profile">
+
+</header>
+
+
+<!-- FEED -->
+
+<main class="feed" id="feed"></main>
+
+
+<!-- CREATE -->
+
+<button
+  class="create"
+  onclick="openCreate()">
+  ＋
+</button>
+
+
+<!-- MOBILE NAV -->
+
+<nav class="mobile">
+
+  <button onclick="showHome()">
+    ⌂
+    <small>Home</small>
+  </button>
+
+  <button onclick="showDiscover()">
+    🔎
+    <small>Discover</small>
+  </button>
+
+  <button onclick="openCreate()">
+    ＋
+    <small>Create</small>
+  </button>
+
+  <button onclick="openInbox()">
+    ✉
+    <small>Inbox</small>
+  </button>
+
+  <button onclick="toggleProfile()">
+    👤
+    <small>Profile</small>
+  </button>
+
+</nav>
+
+
+<!-- CREATE MODAL -->
+
+<div class="modal" id="createModal">
+
+  <div class="box">
+
+    <button
+      class="close"
+      onclick="closeCreate()">
+      ×
+    </button>
+
+    <h2>Create your APEX moment</h2>
+
+    <p style="color:#999;margin-bottom:10px">
+      Upload a photo or video and publish it to APEX.
+    </p>
+
+    <input
+      type="file"
+      id="file"
+      accept="video/*,image/*"
+      onchange="previewFile(event)">
+
+    <video
+      id="videoPreview"
+      class="preview"
+      controls
+      playsinline>
+    </video>
+
+    <img
+      id="imagePreview"
+      class="preview"
+      alt="Preview">
+
+    <div class="tools">
+
+      <button
+        class="tool"
+        onclick="openCamera()">
+        📷 Camera
+      </button>
+
+      <button
+        class="tool"
+        onclick="playSelectedSound()">
+        🎵 Sound
+      </button>
+
+      <button
+        class="tool"
+        onclick="toast('Effects ready ✨')">
+        ✨ Effects
+      </button>
+
+      <button
+        class="tool"
+        onclick="toast('Text tool ready')">
+        Aa Text
+      </button>
+
+    </div>
+
+    <select id="filter">
+
+      <option value="Original">
+        Original
+      </option>
+
+      <option value="Warm Glow">
+        Warm Glow
+      </option>
+
+      <option value="Cool Night">
+        Cool Night
+      </option>
+
+      <option value="Black & White">
+        Black & White
+      </option>
+
+      <option value="Bright">
+        Bright
+      </option>
+
+    </select>
+
+    <input
+      id="sound"
+      placeholder="Sound / music name">
+
+    <textarea
+      id="caption"
+      rows="4"
+      placeholder="Describe your moment..."></textarea>
+
+    <button
+      class="primary"
+      id="publishButton"
+      onclick="publishPost()">
+      Post to APEX
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- AUTH -->
+
+<div class="modal" id="authModal">
+
+  <div class="box">
+
+    <button
+      class="close"
+      onclick="closeAuth()">
+      ×
+    </button>
+
+    <h2 id="authTitle">
+      Join APEX
+    </h2>
+
+    <p
+      id="authMessage"
+      style="color:#aaa;margin-bottom:12px">
+      Create your APEX account.
+    </p>
+
+    <input
+      id="authName"
+      type="text"
+      placeholder="Display name">
+
+    <input
+      id="authUsername"
+      type="text"
+      placeholder="Username">
+
+    <input
+      id="authEmail"
+      type="email"
+      placeholder="Email address">
+
+    <input
+      id="authPassword"
+      type="password"
+      placeholder="Password">
+
+    <button
+      class="primary"
+      onclick="handleAuth()"
+      id="authButton">
+      Create Account
+    </button>
+
+    <button
+      class="tool"
+      style="width:100%;margin-top:8px"
+      onclick="toggleAuthMode()"
+      id="authSwitch">
+      Already have an account? Log in
+    </button>
+
+    <button
+      class="tool"
+      style="width:100%;margin-top:8px"
+      onclick="logout()">
+      Sign out
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- PROFILE -->
+
+<div
+  class="profile-panel"
+  id="profilePanel">
+
+  <div class="profile-head">
+
+    <img
+      class="profile-large"
+      id="profileLarge"
+      src="https://i.pravatar.cc/100?img=12"
+      alt="Profile">
+
+    <div>
+
+      <div
+        class="profile-name"
+        id="profileName">
+        APEX User
+      </div>
+
+      <div
+        class="profile-handle"
+        id="profileHandle">
+        @apex_user
+      </div>
+
+    </div>
+
+  </div>
+
+  <button
+    class="primary"
+    onclick="openAuth()">
+    Account
+  </button>
+
+  <button
+    class="secondary"
+    onclick="showMyPosts()">
+    My Posts
+  </button>
+
+  <button
+    class="secondary"
+    onclick="logout()">
+    Sign out
+  </button>
+
+</div>
+
+
+<!-- COMMENTS -->
+
+<div
+  class="comments"
+  id="commentsPanel">
+
+  <div class="comment-header">
+
+    Comments
+
+    <button
+      class="close"
+      onclick="closeComments()">
+      ×
+    </button>
+
+  </div>
+
+  <div
+    class="comment-list"
+    id="commentList">
+  </div>
+
+  <div class="comment-input">
+
+    <input
+      id="commentInput"
+      placeholder="Add a comment..."
+      onkeydown="if(event.key==='Enter')sendComment()">
+
+    <button onclick="sendComment()">
+      Send
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- DISCOVER -->
+
+<section
+  class="discover"
+  id="discover">
+
+  <h2>Discover APEX</h2>
+
+  <div
+    class="discover-grid"
+    id="discoverGrid">
+  </div>
+
+</section>
+
+
+<!-- TOAST -->
+
+<div
+  class="toast"
+  id="toastBox">
+</div>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* =========================================================
+   APEX CONFIGURATION
+========================================================= */
+
+const SUPABASE_URL =
+"https://myzhieghlnjckdqgoidg.supabase.co";
+
+const SUPABASE_ANON_KEY =
+"sb_publishable_oMEr47Dj8lGm51yAuv-FEg_z_TAm3ON";
+
+const STORAGE_BUCKET =
+"post-media";
+
+const PAYSTACK_LINK =
+"https://paystack.shop/pay/kkof1e1670";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let posts = [];
+
+let currentUser = null;
+
+let currentProfile = null;
+
+let currentPost = null;
+
+let currentFeedType = "forYou";
+
+let authLoginMode = false;
+
+let previewObjectURL = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function formatNumber(number){
+
+  number = Number(number || 0);
+
+  if(number >= 1000000)
+    return (number/1000000).toFixed(1)+"M";
+
+  if(number >= 1000)
+    return (number/1000).toFixed(1)+"K";
+
+  return number;
+
+}
+
+
+function toast(message){
+
+  const box =
+    document.getElementById("toastBox");
+
+  if(!box) return;
+
+  box.textContent = message;
+
+  box.style.display = "block";
+
+  clearTimeout(window.apexToastTimer);
+
+  window.apexToastTimer =
+    setTimeout(() => {
+
+      box.style.display = "none";
+
+    },3000);
+
+}
+
+
+function findPost(id){
+
+  return posts.find(
+    p => String(p.id) === String(id)
+  );
+
+}
+
+
+/* =========================================================
+   CREATE
+========================================================= */
+
+function openCreate(){
+
+  if(!currentUser){
+
+    toast(
+      "Log in before creating a post."
+    );
+
+    openAuth();
+
+    return;
+
+  }
+
+  document
+    .getElementById("createModal")
+    .style.display = "flex";
+
+}
+
+
+function closeCreate(){
+
+  document
+    .getElementById("createModal")
+    .style.display = "none";
+
+}
+
+
+/* =========================================================
+   AUTH UI
+========================================================= */
+
+function openAuth(){
+
+  document
+    .getElementById("authModal")
+    .style.display = "flex";
+
+  document
+    .getElementById("profilePanel")
+    .style.display = "none";
+
+}
+
+
+function closeAuth(){
+
+  document
+    .getElementById("authModal")
+    .style.display = "none";
+
+}
+
+
+function toggleAuthMode(){
+
+  authLoginMode = !authLoginMode;
+
+  const title =
+    document.getElementById("authTitle");
+
+  const message =
+    document.getElementById("authMessage");
+
+  const button =
+    document.getElementById("authButton");
+
+  const switchButton =
+    document.getElementById("authSwitch");
+
+  const name =
+    document.getElementById("authName");
+
+  const username =
+    document.getElementById("authUsername");
+
+
+  if(authLoginMode){
+
+    title.textContent =
+      "Welcome back";
+
+    message.textContent =
+      "Log in to your APEX account.";
+
+    button.textContent =
+      "Log In";
+
+    switchButton.textContent =
+      "Need an account? Sign up";
+
+    name.style.display =
+      "none";
+
+    username.style.display =
+      "none";
+
+  }else{
+
+    title.textContent =
+      "Join APEX";
+
+    message.textContent =
+      "Create your APEX account.";
+
+    button.textContent =
+      "Create Account";
+
+    switchButton.textContent =
+      "Already have an account? Log in";
+
+    name.style.display =
+      "block";
+
+    username.style.display =
+      "block";
+
+  }
+
+}
+
+
+/* =========================================================
+   IMPROVED AUTH
+========================================================= */
+
+async function handleAuth(){
+
+  const button =
+    document.getElementById("authButton");
+
+  if(button.disabled){
+
+    return;
+
+  }
+
+
+  const email =
+    document.getElementById("authEmail")
+      .value.trim();
+
+  const password =
+    document.getElementById("authPassword")
+      .value;
+
+
+  if(!email || !password){
+
+    toast(
+      "Enter email and password."
+    );
+
+    return;
+
+  }
+
+
+  button.disabled = true;
+
+  button.textContent =
+    authLoginMode
+    ? "Logging in..."
+    : "Creating account...";
+
+
+  try{
+
+    if(authLoginMode){
+
+      const {data,error} =
+        await supabaseClient.auth
+        .signInWithPassword({
+
+          email,
+          password
+
+        });
+
+
+      if(error)
+        throw error;
+
+
+      currentUser =
+        data.user;
+
+
+      toast(
+        "Welcome back to APEX 🚀"
+      );
+
+
+      closeAuth();
+
+
+      await loadCurrentProfile();
+
+      await loadPosts();
+
+
+      return;
+
+    }
+
+
+    const displayName =
+      document
+        .getElementById("authName")
+        .value
+        .trim()
+      || "APEX User";
+
+
+    let username =
+      document
+        .getElementById("authUsername")
+        .value
+        .trim()
+        .toLowerCase()
+        .replace(
+          /[^a-z0-9_]/g,
+          ""
+        );
+
+
+    if(!username){
+
+      username =
+        "apex_" +
+        Math.floor(
+          Math.random()*100000
+        );
+
+    }
+
+
+    const {data,error} =
+      await supabaseClient.auth.signUp({
+
+        email,
+
+        password,
+
+        options:{
+
+          data:{
+
+            display_name:
+              displayName,
+
+            username:
+              username
+
+          }
+
+        }
+
+      });
+
+
+    if(error){
+
+      console.error(
+        "APEX signup error:",
+        error
+      );
+
+
+      if(
+        error.message
+          ?.toLowerCase()
+          .includes("rate limit")
+      ){
+
+        toast(
+          "APEX signup is temporarily rate-limited. Please wait a few minutes and try once."
+        );
+
+      }else{
+
+        toast(
+          error.message ||
+          "Account creation failed."
+        );
+
+      }
+
+
+      return;
+
+    }
+
+
+    currentUser =
+      data?.user || null;
+
+
+    if(currentUser){
+
+      await createOrUpdateProfile(
+
+        currentUser,
+
+        displayName,
+
+        username
+
+      );
+
+    }
+
+
+    toast(
+      "Account created! Check your email if confirmation is required."
+    );
+
+
+    closeAuth();
+
+
+    await loadCurrentProfile();
+
+    await loadPosts();
+
+
+  }catch(error){
+
+    console.error(
+      "APEX authentication error:",
+      error
+    );
+
+
+    toast(
+      error.message ||
+      "Authentication failed."
+    );
+
+
+  }finally{
+
+    button.disabled = false;
+
+    button.textContent =
+      authLoginMode
+      ? "Log In"
+      : "Create Account";
+
+  }
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout(){
+
+  try{
+
+    await supabaseClient.auth.signOut();
+
+    currentUser = null;
+
+    currentProfile = null;
+
+    document
+      .getElementById("profilePanel")
+      .style.display = "none";
+
+    updateProfileUI();
+
+    toast(
+      "Signed out of APEX."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Could not sign out."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   PROFILES
+========================================================= */
+
+async function createOrUpdateProfile(
+  user,
+  displayName,
+  username
+){
+
+  if(!user)
+    return null;
+
+
+  const avatar =
+    user.user_metadata?.avatar_url
+    ||
+    "https://i.pravatar.cc/100?img=12";
+
+
+  try{
+
+    const {data,error} =
+      await supabaseClient
+      .from("profiles")
+      .upsert({
+
+        id:user.id,
+
+        username:username,
+
+        display_name:displayName,
+
+        bio:"",
+
+        avatar_url:avatar
+
+      },{
+        onConflict:"id"
+
+      })
+      .select()
+      .single();
+
+
+    if(error){
+
+      console.warn(
+        "Profile error:",
+        error
+      );
+
+      return null;
+
+    }
+
+
+    currentProfile =
+      data;
+
+
+    return data;
+
+  }catch(error){
+
+    console.warn(error);
+
+    return null;
+
+  }
+
+}
+
+
+async function loadCurrentProfile(){
+
+  if(!currentUser){
+
+    updateProfileUI();
+
+    return;
+
+  }
+
+
+  try{
+
+    let {data,error} =
+      await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("id",currentUser.id)
+      .maybeSingle();
+
+
+    if(error){
+
+      console.warn(
+        "Profile loading error:",
+        error
+      );
+
+    }
+
+
+    if(!data){
+
+      data =
+        await createOrUpdateProfile(
+
+          currentUser,
+
+          currentUser
+            .user_metadata
+            ?.display_name
+          ||
+          "APEX User",
+
+          currentUser
+            .user_metadata
+            ?.username
+          ||
+          (
+            "apex_" +
+            Math.floor(
+              Math.random()*100000
+            )
+          )
+
+        );
+
+    }
+
+
+    currentProfile =
+      data || null;
+
+
+    updateProfileUI();
+
+
+  }catch(error){
+
+    console.warn(
+      "Current profile error:",
+      error
+    );
+
+  }
+
+}
+
+
+function updateProfileUI(){
+
+  const avatar =
+    currentProfile?.avatar_url
+    ||
+    currentUser?.user_metadata?.avatar_url
+    ||
+    "https://i.pravatar.cc/100?img=12";
+
+
+  const name =
+    currentProfile?.display_name
+    ||
+    currentUser?.user_metadata?.display_name
+    ||
+    "APEX User";
+
+
+  const username =
+    currentProfile?.username
+    ||
+    currentUser?.user_metadata?.username
+    ||
+    "apex_user";
+
+
+  const avatarElement =
+    document.getElementById(
+      "profileAvatar"
+    );
+
+
+  const largeAvatarElement =
+    document.getElementById(
+      "profileLarge"
+    );
+
+
+  const nameElement =
+    document.getElementById(
+      "profileName"
+    );
+
+
+  const handleElement =
+    document.getElementById(
+      "profileHandle"
+    );
+
+
+  if(avatarElement)
+    avatarElement.src = avatar;
+
+
+  if(largeAvatarElement)
+    largeAvatarElement.src = avatar;
+
+
+  if(nameElement)
+    nameElement.textContent = name;
+
+
+  if(handleElement)
+    handleElement.textContent =
+      "@" + username;
+
+}
+
+
+/* =========================================================
+   SESSION
+   PROTECTED AGAINST HANGING
+========================================================= */
+
+async function loadSession(){
+
+  try{
+
+    const sessionPromise =
+      supabaseClient.auth.getSession();
+
+
+    const timeoutPromise =
+      new Promise((_,reject) => {
+
+        setTimeout(() => {
+
+          reject(
+            new Error(
+              "Supabase session timeout"
+            )
+          );
+
+        },5000);
+
+      });
+
+
+    const {data} =
+      await Promise.race([
+
+        sessionPromise,
+
+        timeoutPromise
+
+      ]);
+
+
+    currentUser =
+      data?.session?.user || null;
+
+
+    if(currentUser){
+
+      await loadCurrentProfile();
+
+    }else{
+
+      updateProfileUI();
+
+    }
+
+
+  }catch(error){
+
+    console.warn(
+      "APEX session loading problem:",
+      error
+    );
+
+
+    currentUser = null;
+
+    currentProfile = null;
+
+    updateProfileUI();
+
+  }
+
+
+  try{
+
+    supabaseClient.auth.onAuthStateChange(
+
+      async (_event,session) => {
+
+        currentUser =
+          session?.user || null;
+
+
+        if(currentUser){
+
+          await loadCurrentProfile();
+
+        }else{
+
+          currentProfile = null;
+
+          updateProfileUI();
+
+        }
+
+      }
+
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Auth listener error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   POSTS
+========================================================= */
+
+async function loadPosts(){
+
+  try{
+
+    const postsPromise =
+      supabaseClient
+      .from("posts")
+      .select(`
+        id,
+        user_id,
+        content,
+        media_url,
+        thumbnail_url,
+        media_type,
+        caption,
+        hashtags,
+        music_name,
+        music_url,
+        privacy,
+        allow_comments,
+        allow_sharing,
+        views_count,
+        likes_count,
+        comments_count,
+        shares_count,
+        created_at,
+        sound,
+        profiles:user_id(
+          username,
+          display_name,
+          avatar_url,
+          is_verified
+        ),
+        post_media(
+          id,
+          media_url,
+          thumbnail_url,
+          media_type,
+          sort_order
+        )
+      `)
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      )
+      .limit(100);
+
+
+    const timeoutPromise =
+      new Promise((_,reject) => {
+
+        setTimeout(() => {
+
+          reject(
+            new Error(
+              "Posts loading timeout"
+            )
+          );
+
+        },7000);
+
+      });
+
+
+    const {data,error} =
+      await Promise.race([
+
+        postsPromise,
+
+        timeoutPromise
+
+      ]);
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    posts =
+      (data || []).map(row => {
+
+        const profile =
+          row.profiles || {};
+
+
+        const mediaList =
+          Array.isArray(row.post_media)
+
+          ?
+
+          row.post_media
+            .slice()
+            .sort(
+              (a,b) =>
+                Number(
+                  a.sort_order || 0
+                )
+                -
+                Number(
+                  b.sort_order || 0
+                )
+            )
+
+          :
+
+          [];
+
+
+        let media =
+          row.media_url || "";
+
+
+        let mediaType =
+          row.media_type || "";
+
+
+        if(
+          !media &&
+          mediaList.length
+        ){
+
+          media =
+            mediaList[0]
+              .media_url
+            || "";
+
+          mediaType =
+            mediaList[0]
+              .media_type
+            || "";
+
+        }
+
+
+        const isVideo =
+          mediaType === "video"
+          ||
+          /\.(mp4|webm|mov|m4v)(\?|$)/i
+            .test(media);
+
+
+        return {
+
+          id:row.id,
+
+          user_id:row.user_id,
+
+          name:
+            profile.display_name
+            ||
+            "APEX Creator",
+
+          handle:
+            profile.username
+            ?
+            "@" + profile.username
+            :
+            "@apex_creator",
+
+          avatar:
+            profile.avatar_url
+            ||
+            "https://i.pravatar.cc/100?img=12",
+
+          verified:
+            !!profile.is_verified,
+
+          caption:
+            row.caption
+            ||
+            row.content
+            ||
+            "",
+
+          media:media,
+
+          thumbnail:
+            row.thumbnail_url
+            ||
+            mediaList[0]
+              ?.thumbnail_url
+            ||
+            "",
+
+          video:isVideo,
+
+          mediaType:mediaType,
+
+          sound:
+            row.sound
+            ||
+            row.music_name
+            ||
+            "APEX Original Sound",
+
+          likes:
+            Number(
+              row.likes_count || 0
+            ),
+
+          commentsCount:
+            Number(
+              row.comments_count || 0
+            ),
+
+          shares:
+            Number(
+              row.shares_count || 0
+            ),
+
+          views:
+            Number(
+              row.views_count || 0
+            ),
+
+          allowComments:
+            row.allow_comments !== false,
+
+          allowSharing:
+            row.allow_sharing !== false,
+
+          createdAt:
+            row.created_at
+
+        };
+
+      });
+
+
+    await renderFeed();
+
+    renderDiscover();
+
+
+  }catch(error){
+
+    console.error(
+      "Posts loading error:",
+      error
+    );
+
+
+    posts = [];
+
+
+    renderFeed();
+
+
+    toast(
+      "APEX opened, but posts could not be loaded."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LIKES
+========================================================= */
+
+async function checkLiked(postId){
+
+  if(!currentUser)
+    return false;
+
+
+  try{
+
+    const {data,error} =
+      await supabaseClient
+      .from("post_likes")
+      .select("id")
+      .eq("post_id",postId)
+      .eq("user_id",currentUser.id)
+      .maybeSingle();
+
+
+    if(error)
+      return false;
+
+
+    return !!data;
+
+  }catch(error){
+
+    return false;
+
+  }
+
+}
+
+
+async function likePost(button,id){
+
+  if(!currentUser){
+
+    toast(
+      "Log in to like posts."
+    );
+
+    openAuth();
+
+    return;
+
+  }
+
+
+  const post =
+    findPost(id);
+
+
+  if(!post)
+    return;
+
+
+  const liked =
+    button.classList.contains(
+      "liked"
+    );
+
+
+  try{
+
+    if(liked){
+
+      const {error} =
+        await supabaseClient
+        .from("post_likes")
+        .delete()
+        .eq("post_id",id)
+        .eq(
+          "user_id",
+          currentUser.id
+        );
+
+
+      if(error)
+        throw error;
+
+
+      button.classList.remove(
+        "liked"
+      );
+
+
+      button
+        .querySelector(".circle")
+        .textContent = "♡";
+
+
+      post.likes =
+        Math.max(
+          0,
+          post.likes - 1
+        );
+
+    }else{
+
+      const {error} =
+        await supabaseClient
+        .from("post_likes")
+        .insert({
+
+          post_id:id,
+
+          user_id:
+            currentUser.id
+
+        });
+
+
+      if(error)
+        throw error;
+
+
+      button.classList.add(
+        "liked"
+      );
+
+
+      button
+        .querySelector(".circle")
+        .textContent = "♥";
+
+
+      post.likes++;
+
+    }
+
+
+    button
+      .querySelector("b")
+      .textContent =
+      formatNumber(
+        post.likes
+      );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Like failed. Check your RLS policy."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   FOLLOW
+========================================================= */
+
+async function checkFollowing(userId){
+
+  if(
+    !currentUser ||
+    !userId
+  )
+    return false;
+
+
+  try{
+
+    const {data,error} =
+      await supabaseClient
+      .from("follows")
+      .select("id")
+      .eq(
+        "follower_id",
+        currentUser.id
+      )
+      .eq(
+        "following_id",
+        userId
+      )
+      .maybeSingle();
+
+
+    if(error)
+      return false;
+
+
+    return !!data;
+
+  }catch(error){
+
+    return false;
+
+  }
+
+}
+
+
+async function toggleFollow(
+  button,
+  userId
+){
+
+  if(!currentUser){
+
+    toast(
+      "Log in to follow creators."
+    );
+
+    openAuth();
+
+    return;
+
+  }
+
+
+  if(!userId){
+
+    toast(
+      "Creator account unavailable."
+    );
+
+    return;
+
+  }
+
+
+  const following =
+    button.classList.contains(
+      "following"
+    );
+
+
+  try{
+
+    if(following){
+
+      const {error} =
+        await supabaseClient
+        .from("follows")
+        .delete()
+        .eq(
+          "follower_id",
+          currentUser.id
+        )
+        .eq(
+          "following_id",
+          userId
+        );
+
+
+      if(error)
+        throw error;
+
+
+      button.classList.remove(
+        "following"
+      );
+
+      button.textContent =
+        "+ Follow";
+
+    }else{
+
+      if(
+        String(userId)
+        ===
+        String(currentUser.id)
+      ){
+
+        toast(
+          "You cannot follow yourself."
+        );
+
+        return;
+
+      }
+
+
+      const {error} =
+        await supabaseClient
+        .from("follows")
+        .insert({
+
+          follower_id:
+            currentUser.id,
+
+          following_id:
+            userId
+
+        });
+
+
+      if(error)
+        throw error;
+
+
+      button.classList.add(
+        "following"
+      );
+
+      button.textContent =
+        "Following";
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Follow failed. Check your RLS policy."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+async function checkSaved(postId){
+
+  if(!currentUser)
+    return false;
+
+
+  try{
+
+    const {data,error} =
+      await supabaseClient
+      .from("saved_posts")
+      .select("id")
+      .eq(
+        "post_id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .maybeSingle();
+
+
+    if(error)
+      return false;
+
+
+    return !!data;
+
+  }catch(error){
+
+    return false;
+
+  }
+
+}
+
+
+async function savePost(
+  button,
+  id
+){
+
+  if(!currentUser){
+
+    toast(
+      "Log in to save posts."
+    );
+
+    openAuth();
+
+    return;
+
+  }
+
+
+  const saved =
+    button.classList.contains(
+      "saved"
+    );
+
+
+  try{
+
+    if(saved){
+
+      const {error} =
+        await supabaseClient
+        .from("saved_posts")
+        .delete()
+        .eq(
+          "post_id",
+          id
+        )
+        .eq(
+          "user_id",
+          currentUser.id
+        );
+
+
+      if(error)
+        throw error;
+
+
+      button.classList.remove(
+        "saved"
+      );
+
+
+      button
+        .querySelector(".circle")
+        .textContent = "🔖";
+
+
+      toast(
+        "Removed from saved posts."
+      );
+
+    }else{
+
+      const {error} =
+        await supabaseClient
+        .from("saved_posts")
+        .insert({
+
+          post_id:id,
+
+          user_id:
+            currentUser.id
+
+        });
+
+
+      if(error)
+        throw error;
+
+
+      button.classList.add(
+        "saved"
+      );
+
+
+      button
+        .querySelector(".circle")
+        .textContent = "★";
+
+
+      toast(
+        "Post saved 🔖"
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Save failed. Check your RLS policy."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER FEED
+========================================================= */
+
+async function renderFeed(
+  list=posts
+){
+
+  const feed =
+    document.getElementById(
+      "feed"
+    );
+
+
+  feed.innerHTML = "";
+
+
+  if(!list.length){
+
+    feed.innerHTML = `
+
+      <section class="post">
+
+        <div class="info">
+
+          <div class="username">
+            APEX is ready 🚀
+          </div>
+
+          <div class="caption">
+            No posts have been published yet.
+            Create the first APEX moment with
+            the + button.
+          </div>
+
+        </div>
+
+      </section>
+
+    `;
+
+    return;
+
+  }
+
+
+  for(const post of list){
+
+    const element =
+      document.createElement(
+        "section"
+      );
+
+
+    element.className =
+      "post";
+
+
+    let mediaHTML = "";
+
+
+    if(post.media){
+
+      if(post.video){
+
+        mediaHTML = `
+
+          <video
+            src="${escapeHTML(post.media)}"
+            ${
+              post.thumbnail
+              ?
+              `poster="${escapeHTML(
+                post.thumbnail
+              )}"`
+              :
+              ""
+            }
+            autoplay
+            loop
+            muted
+            playsinline
+            controls
+            preload="metadata">
+          </video>
+
+        `;
+
+      }else{
+
+        mediaHTML = `
+
+          <img
+            src="${escapeHTML(post.media)}"
+            alt="APEX post"
+            loading="lazy">
+
+        `;
+
+      }
+
+    }else{
+
+      mediaHTML = `
+
+        <div style="
+          width:100%;
+          max-width:720px;
+          height:100%;
+          display:grid;
+          place-items:center;
+          background:#15171c;
+          font-size:60px;
+        ">
+          ◆
+        </div>
+
+      `;
+
+    }
+
+
+    const liked =
+      await checkLiked(
+        post.id
+      );
+
+
+    const saved =
+      await checkSaved(
+        post.id
+      );
+
+
+    const following =
+      await checkFollowing(
+        post.user_id
+      );
+
+
+    element.innerHTML = `
+
+      ${mediaHTML}
+
+      <div class="info">
+
+        <div class="username">
+
+          ${escapeHTML(
+            post.name
+          )}
+
+          ${
+            post.verified
+            ? " ✓"
+            : ""
+          }
+
+          <span class="handle">
+            ${escapeHTML(
+              post.handle
+            )}
+          </span>
+
+        </div>
+
+        <div class="caption">
+          ${escapeHTML(
+            post.caption
+          )}
+        </div>
+
+        <div class="sound">
+          🎵 ${escapeHTML(
+            post.sound
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <img
+          class="creator"
+          src="${escapeHTML(
+            post.avatar
+          )}"
+          alt="Creator">
+
+
+        ${
+          String(post.user_id)
+          !==
+          String(
+            currentUser?.id || ""
+          )
+
+          ?
+
+          `
+
+          <button
+            class="follow ${
+              following
+              ? "following"
+              : ""
+            }"
+            onclick="toggleFollow(
+              this,
+              '${escapeHTML(
+                post.user_id
+              )}'
+            )">
+
+            ${
+              following
+              ?
+              "Following"
+              :
+              "+ Follow"
+            }
+
+          </button>
+
+          `
+
+          :
+
+          ""
+
+        }
+
+
+        <button
+          class="action ${
+            liked
+            ? "liked"
+            : ""
+          }"
+          onclick="likePost(
+            this,
+            '${escapeHTML(
+              post.id
+            )}'
+          )">
+
+          <div class="circle">
+            ${
+              liked
+              ? "♥"
+              : "♡"
+            }
+          </div>
+
+          <b>
+            ${formatNumber(
+              post.likes
+            )}
+          </b>
+
+        </button>
+
+
+        ${
+          post.allowComments
+
+          ?
+
+          `
+
+          <button
+            class="action"
+            onclick="openComments(
+              '${escapeHTML(
+                post.id
+              )}'
+            )">
+
+            <div class="circle">
+              💬
+            </div>
+
+            <b>
+              ${formatNumber(
+                post.commentsCount
+              )}
+            </b>
+
+          </button>
+
+          `
+
+          :
+
+          ""
+
+        }
+
+
+        ${
+          post.allowSharing
+
+          ?
+
+          `
+
+          <button
+            class="action"
+            onclick="sharePost(
+              '${escapeHTML(
+                post.id
+              )}'
+            )">
+
+            <div class="circle">
+              ↗
+            </div>
+
+            <b>
+              Share
+            </b>
+
+          </button>
+
+          `
+
+          :
+
+          ""
+
+        }
+
+
+        <button
+          class="action ${
+            saved
+            ? "saved"
+            : ""
+          }"
+          onclick="savePost(
+            this,
+            '${escapeHTML(
+              post.id
+            )}'
+          )">
+
+          <div class="circle">
+            ${
+              saved
+              ? "★"
+              : "🔖"
+            }
+          </div>
+
+          <b>
+            Save
+          </b>
+
+        </button>
+
+
+        <button
+          class="action"
+          onclick="showMore(
+            '${escapeHTML(
+              post.id
+            )}'
+          )">
+
+          <div class="circle">
+            •••
+          </div>
+
+          <b>
+            More
+          </b>
+
+        </button>
+
+      </div>
+
+    `;
+
+
+    feed.appendChild(
+      element
+    );
+
+  }
+
+
+  setupVideoPlayback();
+
+}
+
+
+/* =========================================================
+   VIDEO PLAYBACK
+========================================================= */
+
+function setupVideoPlayback(){
+
+  const videos =
+    document.querySelectorAll(
+      ".post video"
+    );
+
+
+  if(!("IntersectionObserver" in window)){
+
+    videos.forEach(
+      video => {
+        video.play()
+          .catch(()=>{});
+      }
+    );
+
+    return;
+
+  }
+
+
+  const observer =
+    new IntersectionObserver(
+
+      entries => {
+
+        entries.forEach(
+          entry => {
+
+            const video =
+              entry.target;
+
+
+            if(entry.isIntersecting){
+
+              video.play()
+                .catch(()=>{});
+
+            }else{
+
+              video.pause();
+
+            }
+
+          }
+        );
+
+      },
+
+      {
+        threshold:.65
+      }
+
+    );
+
+
+  videos.forEach(
+    video =>
+      observer.observe(video)
+  );
+
+}
+
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+async function loadComments(
+  postId
+){
+
+  try{
+
+    const {data,error} =
+      await supabaseClient
+      .from("comments")
+      .select(`
+        id,
+        post_id,
+        user_id,
+        content,
+        likes_count,
+        created_at,
+        profiles:user_id(
+          username,
+          display_name,
+          avatar_url
+        )
+      `)
+      .eq(
+        "post_id",
+        postId
+      )
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
+
+
+    if(error)
+      throw error;
+
+
+    return data || [];
+
+
+  }catch(error){
+
+    console.error(error);
+
+    return [];
+
+  }
+
+}
+
+
+async function openComments(
+  id
+){
+
+  currentPost = id;
+
+
+  const panel =
+    document.getElementById(
+      "commentsPanel"
+    );
+
+
+  const list =
+    document.getElementById(
+      "commentList"
+    );
+
+
+  list.innerHTML =
+    "<p style='color:#888'>Loading comments...</p>";
+
+
+  panel.style.display =
+    "flex";
+
+
+  const comments =
+    await loadComments(
+      id
+    );
+
+
+  if(!comments.length){
+
+    list.innerHTML =
+      "<p style='color:#888'>No comments yet. Be the first.</p>";
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    comments
+      .map(comment => {
+
+        const profile =
+          comment.profiles || {};
+
+
+        return `
+
+          <div class="comment">
+
+            <b>
+              ${escapeHTML(
+                profile.display_name
+                ||
+                profile.username
+                ||
+                "APEX User"
+              )}
+            </b>
+
+            <small>
+              ${
+                profile.username
+                ?
+                "@" +
+                escapeHTML(
+                  profile.username
+                )
+                :
+                ""
+              }
+            </small>
+
+            <br><br>
+
+            ${escapeHTML(
+              comment.content
+            )}
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+
+}
+
+
+function closeComments(){
+
+  document
+    .getElementById(
+      "commentsPanel"
+    )
+    .style.display =
+    "none";
+
+}
+
+
+async function sendComment(){
+
+  if(!currentUser){
+
+    toast(
+      "Log in to comment."
+    );
+
+    openAuth();
+
+    return;
+
+  }
+
+
+  if(!currentPost)
+    return;
+
+
+  const input =
+    document.getElementById(
+      "commentInput"
+    );
+
+
+  const value =
+    input.value.trim();
+
+
+  if(!value)
+    return;
+
+
+  try{
+
+    const {error} =
+      await supabaseClient
+      .from("comments")
+      .insert({
+
+        post_id:
+          currentPost,
+
+        user_id:
+          currentUser.id,
+
+        content:
+          value
+
+      });
+
+
+    if(error)
+      throw error;
+
+
+    input.value = "";
+
+
+    toast(
+      "Comment added 💬"
+    );
+
+
+    await openComments(
+      currentPost
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Comment failed. Check your RLS policy."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function searchPosts(){
+
+  const query =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  if(!query){
+
+    renderFeed();
+
+    return;
+
+  }
+
+
+  const result =
+    posts.filter(
+      post => {
+
+        return (
+
+          String(post.name)
+            .toLowerCase()
+            .includes(query)
+
+          ||
+
+          String(post.handle)
+            .toLowerCase()
+            .includes(query)
+
+          ||
+
+          String(post.caption)
+            .toLowerCase()
+            .includes(query)
+
+          ||
+
+          String(post.sound)
+            .toLowerCase()
+            .includes(query)
+
+        );
+
+      }
+    );
+
+
+  renderFeed(
+    result
+  );
+
+}
+
+
+/* =========================================================
+   FEED SWITCH
+========================================================= */
+
+async function changeFeed(
+  button,
+  type
+){
+
+  currentFeedType =
+    type;
+
+
+  document
+    .querySelectorAll(
+      ".tabs button"
+    )
+    .forEach(
+      item =>
+        item.classList.remove(
+          "active"
+        )
+    );
+
+
+  button.classList.add(
+    "active"
+  );
+
+
+  if(type === "following"){
+
+    if(!currentUser){
+
+      toast(
+        "Log in to see creators you follow."
+      );
+
+      openAuth();
+
+      return;
+
+    }
+
+
+    try{
+
+      const {data,error} =
+        await supabaseClient
+        .from("follows")
+        .select(
+          "following_id"
+        )
+        .eq(
+          "follower_id",
+          currentUser.id
+        );
+
+
+      if(error)
+        throw error;
+
+
+      const ids =
+        new Set(
+          (data || [])
+            .map(
+              row =>
+                String(
+                  row.following_id
+                )
+            )
+        );
+
+
+      renderFeed(
+        posts.filter(
+          post =>
+            ids.has(
+              String(
+                post.user_id
+              )
+            )
+        )
+      );
+
+
+    }catch(error){
+
+      console.error(error);
+
+      toast(
+        "Following feed could not load."
+      );
+
+    }
+
+  }else{
+
+    renderFeed();
+
+  }
+
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+async function sharePost(
+  id
+){
+
+  const url =
+    window.location.href
+    +
+    "#post-"
+    +
+    encodeURIComponent(
+      id
+    );
+
+
+  if(navigator.share){
+
+    try{
+
+      await navigator.share({
+
+        title:
+          "APEX",
+
+        text:
+          "Check out this post on APEX 🚀",
+
+        url:url
+
+      });
+
+    }catch(error){}
+
+  }else{
+
+    try{
+
+      await navigator.clipboard
+        .writeText(url);
+
+      toast(
+        "APEX link copied 🔗"
+      );
+
+    }catch(error){
+
+      toast(
+        "Share link ready."
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   MORE
+========================================================= */
+
+function showMore(id){
+
+  const choice =
+    prompt(
+      "APEX options:\n\n1 = Report\n2 = Not interested\n3 = Cancel"
+    );
+
+
+  if(choice === "1"){
+
+    toast(
+      "Report received."
+    );
+
+  }else if(choice === "2"){
+
+    toast(
+      "We'll reduce similar posts."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   FILE PREVIEW
+========================================================= */
+
+function previewFile(
+  event
+){
+
+  const file =
+    event.target.files[0];
+
+
+  if(!file)
+    return;
+
+
+  if(previewObjectURL){
+
+    URL.revokeObjectURL(
+      previewObjectURL
+    );
+
+  }
+
+
+  previewObjectURL =
+    URL.createObjectURL(
+      file
+    );
+
+
+  const video =
+    document.getElementById(
+      "videoPreview"
+    );
+
+
+  const image =
+    document.getElementById(
+      "imagePreview"
+    );
+
+
+  video.style.display =
+    "none";
+
+  image.style.display =
+    "none";
+
+
+  if(
+    file.type.startsWith(
+      "video"
+    )
+  ){
+
+    video.src =
+      previewObjectURL;
+
+
+    video.style.display =
+      "block";
+
+
+    video.play()
+      .catch(()=>{});
+
+
+  }else{
+
+    image.src =
+      previewObjectURL;
+
+
+    image.style.display =
+      "block";
+
+  }
+
+}
+
+
+/* =========================================================
+   STORAGE UPLOAD
+========================================================= */
+
+async function uploadMedia(
+  file
+){
+
+  if(!currentUser){
+
+    throw new Error(
+      "You must log in before uploading."
+    );
+
+  }
+
+
+  const extension =
+    (
+      file.name
+        .split(".")
+        .pop()
+      ||
+      "bin"
+    )
+    .toLowerCase();
+
+
+  const path =
+    currentUser.id
+    +
+    "/"
+    +
+    Date.now()
+    +
+    "_"
+    +
+    Math.random()
+      .toString(36)
+      .slice(2)
+    +
+    "."
+    +
+    extension;
+
+
+  const {error} =
+    await supabaseClient
+    .storage
+    .from(
+      STORAGE_BUCKET
+    )
+    .upload(
+      path,
+      file,
+      {
+
+        cacheControl:
+          "3600",
+
+        upsert:
+          false,
+
+        contentType:
+          file.type
+
+      }
+    );
+
+
+  if(error)
+    throw error;
+
+
+  const {data} =
+    supabaseClient
+    .storage
+    .from(
+      STORAGE_BUCKET
+    )
+    .getPublicUrl(
+      path
+    );
+
+
+  return data.publicUrl;
+
+}
+
+
+/* =========================================================
+   PUBLISH
+========================================================= */
+
+async function publishPost(){
+
+  if(!currentUser){
+
+    toast(
+      "Please log in first."
+    );
+
+    openAuth();
+
+    return;
+
+  }
+
+
+  const file =
+    document
+      .getElementById(
+        "file"
+      )
+      .files[0];
+
+
+  if(!file){
+
+    toast(
+      "Choose a photo or video first."
+    );
+
+    return;
+
+  }
+
+
+  const caption =
+    document
+      .getElementById(
+        "caption"
+      )
+      .value
+      .trim()
+    ||
+    "New moment on APEX ✨";
+
+
+  const sound =
+    document
+      .getElementById(
+        "sound"
+      )
+      .value
+      .trim()
+    ||
+    "APEX Original Sound";
+
+
+  const button =
+    document.getElementById(
+      "publishButton"
+    );
+
+
+  try{
+
+    button.disabled =
+      true;
+
+
+    button.textContent =
+      "Uploading...";
+
+
+    const mediaUrl =
+      await uploadMedia(
+        file
+      );
+
+
+    const isVideo =
+      file.type.startsWith(
+        "video"
+      );
+
+
+    const postPayload = {
+
+      user_id:
+        currentUser.id,
+
+      content:
+        caption,
+
+      media_url:
+        mediaUrl,
+
+      media_type:
+        isVideo
+        ?
+        "video"
+        :
+        "image",
+
+      caption:
+        caption,
+
+      music_name:
+        sound,
+
+      sound:
+        sound,
+
+      privacy:
+        "public",
+
+      allow_comments:
+        true,
+
+      allow_sharing:
+        true,
+
+      views_count:
+        0,
+
+      likes_count:
+        0,
+
+      comments_count:
+        0,
+
+      shares_count:
+        0
+
+    };
+
+
+    const {data,error} =
+      await supabaseClient
+      .from("posts")
+      .insert(
+        postPayload
+      )
+      .select()
+      .single();
+
+
+    if(error)
+      throw error;
+
+
+    try{
+
+      await supabaseClient
+        .from("post_media")
+        .insert({
+
+          post_id:
+            data.id,
+
+          media_url:
+            mediaUrl,
+
+          media_type:
+            isVideo
+            ?
+            "video"
+            :
+            "image",
+
+          sort_order:
+            0
+
+        });
+
+    }catch(mediaError){
+
+      console.warn(
+        "post_media insert warning:",
+        mediaError
+      );
+
+    }
+
+
+    closeCreate();
+
+
+    resetCreateForm();
+
+
+    toast(
+      "Your post is live on APEX 🚀"
+    );
+
+
+    await loadPosts();
+
+
+    document
+      .getElementById(
+        "feed"
+      )
+      .scrollTo({
+
+        top:0,
+
+        behavior:
+          "smooth"
+
+      });
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    toast(
+      "Upload failed: " +
+      (
+        error.message
+        ||
+        "Unknown error"
+      )
+    );
+
+
+  }finally{
+
+    button.disabled =
+      false;
+
+
+    button.textContent =
+      "Post to APEX";
+
+  }
+
+}
+
+
+/* =========================================================
+   RESET CREATE FORM
+========================================================= */
+
+function resetCreateForm(){
+
+  const file =
+    document.getElementById(
+      "file"
+    );
+
+
+  const video =
+    document.getElementById(
+      "videoPreview"
+    );
+
+
+  const image =
+    document.getElementById(
+      "imagePreview"
+    );
+
+
+  file.value = "";
+
+
+  video.pause();
+
+  video.removeAttribute(
+    "src"
+  );
+
+  video.load();
+
+
+  image.removeAttribute(
+    "src"
+  );
+
+
+  video.style.display =
+    "none";
+
+
+  image.style.display =
+    "none";
+
+
+  document
+    .getElementById(
+      "caption"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "sound"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "filter"
+    )
+    .value =
+    "Original";
+
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+async function openCamera(){
+
+  try{
+
+    if(
+      !navigator
+        .mediaDevices
+        ?.getUserMedia
+    ){
+
+      toast(
+        "Camera requires HTTPS hosting."
+      );
+
+      return;
+
+    }
+
+
+    const stream =
+      await navigator
+        .mediaDevices
+        .getUserMedia({
+
+          video:true,
+
+          audio:true
+
+        });
+
+
+    toast(
+      "Camera permission granted."
+    );
+
+
+    stream
+      .getTracks()
+      .forEach(
+        track =>
+          track.stop()
+      );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Camera permission was not granted."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SOUND
+========================================================= */
+
+function playSelectedSound(){
+
+  const sound =
+    document
+      .getElementById(
+        "sound"
+      )
+      .value
+      .trim();
+
+
+  if(!sound){
+
+    toast(
+      "Enter a sound/music name first 🎵"
+    );
+
+    return;
+
+  }
+
+
+  toast(
+    "Sound selected: " +
+    sound
+  );
+
+}
+
+
+/* =========================================================
+   DISCOVER
+========================================================= */
+
+function showDiscover(){
+
+  document
+    .getElementById(
+      "discover"
+    )
+    .style.display =
+    "block";
+
+
+  renderDiscover();
+
+}
+
+
+function renderDiscover(){
+
+  const grid =
+    document.getElementById(
+      "discoverGrid"
+    );
+
+
+  grid.innerHTML = "";
+
+
+  posts
+    .slice(0,30)
+    .forEach(post => {
+
+      if(!post.media)
+        return;
+
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+
+      item.className =
+        "discover-item";
+
+
+      if(post.video){
+
+        item.innerHTML = `
+
+          <video
+            src="${escapeHTML(
+              post.media
+            )}"
+            muted
+            playsinline
+            preload="metadata">
+          </video>
+
+        `;
+
+      }else{
+
+        item.innerHTML = `
+
+          <img
+            src="${escapeHTML(
+              post.media
+            )}"
+            alt="APEX discovery">
+
+        `;
+
+      }
+
+
+      item.onclick =
+        () => {
+
+          document
+            .getElementById(
+              "discover"
+            )
+            .style.display =
+            "none";
+
+
+          const index =
+            posts.findIndex(
+              p =>
+                String(p.id)
+                ===
+                String(
+                  post.id
+                )
+            );
+
+
+          renderFeed();
+
+
+          setTimeout(() => {
+
+            const sections =
+              document.querySelectorAll(
+                ".post"
+              );
+
+
+            if(
+              sections[index]
+            ){
+
+              sections[index]
+                .scrollIntoView({
+
+                  behavior:
+                    "smooth"
+
+                });
+
+            }
+
+          },150);
+
+        };
+
+
+      grid.appendChild(
+        item
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function showHome(){
+
+  document
+    .getElementById(
+      "discover"
+    )
+    .style.display =
+    "none";
+
+
+  document
+    .getElementById(
+      "feed"
+    )
+    .scrollTo({
+
+      top:0,
+
+      behavior:
+        "smooth"
+
+    });
+
+}
+
+
+/* =========================================================
+   LIVE
+========================================================= */
+
+function showLive(){
+
+  toast(
+    "APEX LIVE is ready for the live-stream system 🔴"
+  );
+
+}
+
+
+/* =========================================================
+   INBOX
+========================================================= */
+
+function openInbox(){
+
+  if(!currentUser){
+
+    toast(
+      "Log in to open your APEX inbox."
+    );
+
+    openAuth();
+
+    return;
+
+  }
+
+
+  toast(
+    "APEX Inbox is connected to your messaging system 💬"
+  );
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function toggleProfile(){
+
+  const panel =
+    document.getElementById(
+      "profilePanel"
+    );
+
+
+  panel.style.display =
+    panel.style.display ===
+    "block"
+
+    ?
+
+    "none"
+
+    :
+
+    "block";
+
+}
+
+
+function showMyPosts(){
+
+  if(!currentUser){
+
+    toast(
+      "Log in first."
+    );
+
+    openAuth();
+
+    return;
+
+  }
+
+
+  document
+    .getElementById(
+      "profilePanel"
+    )
+    .style.display =
+    "none";
+
+
+  const mine =
+    posts.filter(
+      post =>
+        String(
+          post.user_id
+        )
+        ===
+        String(
+          currentUser.id
+        )
+    );
+
+
+  renderFeed(
+    mine
+  );
+
+}
+
+
+/* =========================================================
+   PAYSTACK
+========================================================= */
+
+function checkout(){
+
+  window.location.href =
+    PAYSTACK_LINK;
+
+}
+
+
+/* =========================================================
+   ESCAPE / MODALS
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key ===
+      "Escape"
+    ){
+
+      closeCreate();
+
+      closeAuth();
+
+      closeComments();
+
+
+      document
+        .getElementById(
+          "profilePanel"
+        )
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById(
+          "discover"
+        )
+        .style.display =
+        "none";
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   START APEX
+   IMPORTANT:
+   THE APP WILL NOT STAY ON THE LOADING SCREEN FOREVER.
+========================================================= */
+
+async function startAPEX(){
+
+  const loading =
+    document.getElementById(
+      "loading"
+    );
+
+
+  /*
+    Emergency timeout.
+
+    Even if Supabase becomes unavailable,
+    the APEX interface will open after 8 seconds.
+  */
+
+  const loadingTimeout =
+    setTimeout(() => {
+
+      if(loading){
+
+        loading.style.display =
+          "none";
+
+      }
+
+
+      console.warn(
+        "APEX loading timeout. Supabase may be unavailable."
+      );
+
+
+      toast(
+        "APEX opened. Some online features may still be loading."
+      );
+
+    },8000);
+
+
+  try{
+
+    updateProfileUI();
+
+
+    /*
+      Load session with its own
+      5-second protection.
+    */
+
+    await loadSession();
+
+
+    /*
+      Load posts with its own
+      7-second protection.
+    */
+
+    await loadPosts();
+
+
+  }catch(error){
+
+    console.error(
+      "APEX startup error:",
+      error
+    );
+
+
+    toast(
+      "APEX opened with limited online features."
+    );
+
+
+  }finally{
+
+    clearTimeout(
+      loadingTimeout
+    );
+
+
+    if(loading){
+
+      loading.style.display =
+        "none";
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+startAPEX();
+
+</script>
+
+</body>
+</html>
