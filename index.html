@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#08090c">
+<meta name="description" content="APEX — Live Your Moment">
+<title>APEX — Live Your Moment</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+ --bg:#08090c;
+ --card:#111319;
+ --card2:#171922;
+ --line:#272a34;
+ --text:#fff;
+ --muted:#9da2b1;
+ --accent:#ff3d71;
+ --accent2:#7c5cff;
+}
+
+body{
+ font-family:Arial,Inter,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+ min-height:100vh;
+}
+
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0;color:inherit}
+
+.top{
+ height:64px;
+ border-bottom:1px solid var(--line);
+ display:flex;
+ align-items:center;
+ gap:16px;
+ padding:0 22px;
+ position:sticky;
+ top:0;
+ background:rgba(8,9,12,.95);
+ backdrop-filter:blur(14px);
+ z-index:50;
+}
+
+.logo{
+ font-size:25px;
+ font-weight:900;
+ letter-spacing:2px;
+ background:linear-gradient(90deg,#ff3d71,#7c5cff);
+ -webkit-background-clip:text;
+ color:transparent;
+}
+
+.search{
+ flex:1;
+ max-width:620px;
+ margin:auto;
+}
+
+.search input{
+ width:100%;
+ background:#151720;
+ border:1px solid var(--line);
+ color:#fff;
+ border-radius:24px;
+ padding:11px 17px;
+ outline:none;
+}
+
+.avatar{
+ width:38px;
+ height:38px;
+ border-radius:50%;
+ object-fit:cover;
+}
+
+.layout{
+ max-width:1380px;
+ margin:auto;
+ display:grid;
+ grid-template-columns:220px minmax(0,650px) 300px;
+ gap:22px;
+ padding:22px;
+}
+
+.side{
+ position:sticky;
+ top:86px;
+ height:max-content;
+}
+
+.nav{
+ display:grid;
+ gap:5px;
+}
+
+.nav button{
+ background:transparent;
+ text-align:left;
+ padding:13px;
+ border-radius:12px;
+ color:#ddd;
+}
+
+.nav button:hover,
+.nav .active{
+ background:#171922;
+}
+
+.create,
+.primary,
+.pay{
+ background:linear-gradient(90deg,var(--accent),var(--accent2));
+ font-weight:800;
+ border-radius:12px;
+ padding:12px 18px;
+ color:#fff;
+}
+
+.create{width:100%}
+
+.card,
+.premium{
+ background:var(--card);
+ border:1px solid var(--line);
+ border-radius:17px;
+ margin-bottom:16px;
+}
+
+.stories{
+ display:flex;
+ gap:17px;
+ padding:15px;
+ overflow:auto;
+}
+
+.story{
+ min-width:64px;
+ text-align:center;
+ font-size:11px;
+ color:#ddd;
+}
+
+.story img{
+ width:54px;
+ height:54px;
+ border-radius:50%;
+ object-fit:cover;
+ border:2px solid var(--accent);
+ display:block;
+ margin:auto auto 5px;
+}
+
+.composer{padding:15px}
+
+.composer-row{
+ display:flex;
+ gap:10px;
+}
+
+.composer textarea{
+ flex:1;
+ background:#171922;
+ border:1px solid var(--line);
+ border-radius:12px;
+ color:#fff;
+ padding:12px;
+ resize:none;
+ min-height:50px;
+ outline:none;
+}
+
+.tools{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-top:10px;
+}
+
+.tool{
+ background:#191c25;
+ border:1px solid var(--line);
+ border-radius:9px;
+ padding:8px 10px;
+ margin-right:5px;
+ color:#ddd;
+}
+
+.video-card{overflow:hidden}
+
+.post-head{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ padding:14px;
+}
+
+.post-head small,
+.muted{
+ color:var(--muted);
+}
+
+.media{
+ width:100%;
+ height:560px;
+ object-fit:cover;
+ background:#050507;
+ display:block;
+}
+
+.post-body{padding:13px}
+
+.post-actions{
+ display:flex;
+ gap:20px;
+ margin:11px 0;
+}
+
+.post-actions button{
+ background:none;
+ color:#ddd;
+}
+
+.liked{color:#ff3d71!important}
+
+.comment-panel{
+ display:none;
+ border-top:1px solid var(--line);
+ padding-top:10px;
+}
+
+.comment-panel input{
+ width:78%;
+ background:#171922;
+ border:1px solid var(--line);
+ color:#fff;
+ border-radius:9px;
+ padding:9px;
+}
+
+.comment-panel button{
+ padding:9px;
+ border-radius:9px;
+ background:#272b38;
+}
+
+.right{
+ position:sticky;
+ top:86px;
+ height:max-content;
+}
+
+.premium{
+ padding:17px;
+ border-color:#5a3fff;
+}
+
+.premium h3{margin-bottom:7px}
+
+.premium p{
+ font-size:13px;
+ color:#b4b7c3;
+ line-height:1.5;
+ margin-bottom:12px;
+}
+
+.trend,
+.sidebox,
+.profile{
+ padding:16px;
+}
+
+.trenditem{
+ padding:12px 0;
+ border-bottom:1px solid var(--line);
+}
+
+.person{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ padding:10px 0;
+}
+
+.person img{
+ width:34px;
+ height:34px;
+ border-radius:50%;
+}
+
+.person b{flex:1}
+
+.person button{
+ background:#fff;
+ color:#000;
+ border-radius:8px;
+ padding:6px 9px;
+ font-size:12px;
+}
+
+.profile-cover{
+ height:75px;
+ border-radius:12px;
+ background:linear-gradient(
+ 120deg,
+ #ff3d71,
+ #7c5cff,
+ #00c2ff
+ );
+ margin:-1px -1px 10px;
+}
+
+.profile-main{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ margin-top:-30px;
+ padding-left:10px;
+}
+
+.profile-main .avatar{
+ border:3px solid var(--card);
+ width:60px;
+ height:60px;
+}
+
+.profile p{
+ color:var(--muted);
+ font-size:13px;
+ margin-top:7px;
+}
+
+.profile-actions{
+ display:flex;
+ gap:7px;
+ margin-top:12px;
+}
+
+.profile-actions button{
+ flex:1;
+ background:#1a1d27;
+ padding:9px;
+ border-radius:9px;
+}
+
+.mobile{display:none}
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.75);
+ display:none;
+ align-items:center;
+ justify-content:center;
+ z-index:100;
+ padding:16px;
+}
+
+.box{
+ width:min(560px,100%);
+ max-height:92vh;
+ overflow:auto;
+ background:#111319;
+ border:1px solid var(--line);
+ border-radius:18px;
+ padding:20px;
+ position:relative;
+}
+
+.close{
+ position:absolute;
+ right:14px;
+ top:10px;
+ background:#222632;
+ border-radius:50%;
+ width:34px;
+ height:34px;
+ font-size:22px;
+}
+
+.box h2{margin-bottom:15px}
+
+.box input,
+.box textarea,
+.box select{
+ width:100%;
+ margin:7px 0;
+ background:#181b24;
+ border:1px solid var(--line);
+ color:#fff;
+ border-radius:10px;
+ padding:11px;
+ outline:none;
+}
+
+.row2{
+ display:flex;
+ gap:6px;
+ flex-wrap:wrap;
+ margin:7px 0;
+}
+
+.camera{
+ display:none;
+ background:#000;
+ border-radius:12px;
+ overflow:hidden;
+}
+
+.camera video{
+ width:100%;
+ max-height:300px;
+}
+
+.toast{
+ position:fixed;
+ bottom:85px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#fff;
+ color:#111;
+ padding:10px 15px;
+ border-radius:10px;
+ display:none;
+ z-index:200;
+ font-weight:700;
+}
+
+.status{
+ font-size:12px;
+ color:#9da2b1;
+ margin:10px 0;
+}
+
+.status.ok{color:#4ade80}
+.status.err{color:#ff6b81}
+
+.auth-status{
+ padding:10px 14px;
+ border-radius:10px;
+ background:#171922;
+ margin-bottom:16px;
+ font-size:13px;
+ color:#bbb;
+}
+
+@media(max-width:1050px){
+ .layout{
+  grid-template-columns:180px minmax(0,1fr);
+ }
+ .right{display:none}
+}
+
+@media(max-width:700px){
+ .top{padding:0 10px}
+ .search{max-width:none}
+
+ .layout{
+  display:block;
+  padding:10px;
+ }
+
+ .side{display:none}
+
+ .mobile{
+  display:flex;
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:62px;
+  background:#111217;
+  border-top:1px solid var(--line);
+  z-index:80;
+  justify-content:space-around;
+ }
+
+ .mobile button{
+  background:transparent;
+  font-size:19px;
+ }
+
+ .mobile small{
+  display:block;
+  font-size:9px;
+  color:#bbb;
+ }
+
+ .media{
+  height:68vh;
+  min-height:430px;
+ }
+
+ .top .avatar{display:none}
+
+ .stories{
+  margin:0 -1px;
+ }
+
+ .tools .tool{
+  padding:7px 8px;
+  font-size:12px;
+ }
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+
+<div class="logo">APEX</div>
+
+<div class="search">
+<input
+ id="search"
+ placeholder="Search creators, sounds and posts..."
+ oninput="searchFeed()">
+</div>
+
+<button onclick="toast('Notifications 🔔')">🔔</button>
+
+<button onclick="toast('Messages 💬')">💬</button>
+
+<img
+ id="headerAvatar"
+ class="avatar"
+ src="https://i.pravatar.cc/100?img=12"
+ alt="Profile">
+
+</header>
+
+
+<div class="layout">
+
+<aside class="side">
+
+<nav class="nav">
+
+<button class="active">
+🏠 For You
+</button>
+
+<button onclick="setFeed('following')">
+👥 Following
+</button>
+
+<button onclick="toast('Explore opened')">
+🔎 Explore
+</button>
+
+<button onclick="toast('Trending sounds')">
+🔥 Trending
+</button>
+
+<button onclick="toast('LIVE is coming soon')">
+🔴 LIVE
+</button>
+
+<button onclick="toast('Messages opened')">
+💬 Messages
+</button>
+
+<button onclick="openProfile()">
+👤 Profile
+</button>
+
+</nav>
+
+<br>
+
+<button class="create" onclick="openCreate()">
+＋ Create
+</button>
+
+</aside>
+
+
+<main>
+
+<div id="authStatus" class="auth-status">
+Connecting to APEX...
+</div>
+
+<section class="card stories">
+
+<div class="story">
+<img
+ id="storyAvatar"
+ src="https://i.pravatar.cc/100?img=12"
+ alt="Your Story">
+Your Story
+</div>
+
+<div class="story">
+<img src="https://i.pravatar.cc/100?img=32" alt="Amaka">
+Amaka
+</div>
+
+<div class="story">
+<img src="https://i.pravatar.cc/100?img=13" alt="Daniel">
+Daniel
+</div>
+
+<div class="story">
+<img src="https://i.pravatar.cc/100?img=47" alt="Chika">
+Chika
+</div>
+
+<div class="story">
+<img src="https://i.pravatar.cc/100?img=68" alt="David">
+David
+</div>
+
+</section>
+
+
+<section class="card composer">
+
+<div class="composer-row">
+
+<img
+ id="composerAvatar"
+ class="avatar"
+ src="https://i.pravatar.cc/100?img=12"
+ alt="Profile">
+
+<textarea
+ id="quickText"
+ placeholder="Share your moment on APEX...">
+</textarea>
+
+</div>
+
+<div class="tools">
+
+<div>
+
+<button
+ class="tool"
+ onclick="openCreate('video')">
+🎥 Video
+</button>
+
+<button
+ class="tool"
+ onclick="openCreate('photo')">
+📸 Photo
+</button>
+
+<button
+ class="tool"
+ onclick="openCreate('sound')">
+🎵 Sound
+</button>
+
+</div>
+
+<button
+ class="create"
+ style="width:auto"
+ onclick="quickPost()">
+Post
+</button>
+
+</div>
+
+</section>
+
+
+<div id="feed"></div>
+
+</main>
+
+
+<aside class="right">
+
+<section class="profile">
+
+<div class="profile-cover"></div>
+
+<div class="profile-main">
+
+<img
+ id="sideAvatar"
+ class="avatar"
+ src="https://i.pravatar.cc/100?img=12"
+ alt="Profile">
+
+<b id="sideName">
+Chinotech
+</b>
+
+</div>
+
+<p id="sideHandle">
+@apex_user · Building on APEX
+</p>
+
+<div class="profile-actions">
+
+<button onclick="openProfile()">
+View Profile
+</button>
+
+<button onclick="editProfile()">
+Edit
+</button>
+
+</div>
+
+</section>
+
+
+<section class="premium">
+
+<h3>
+⭐ APEX Premium
+</h3>
+
+<p>
+Unlock APEX premium features and support the platform.
+</p>
+
+<button
+ class="pay"
+ onclick="checkout()">
+Continue to Pay
+</button>
+
+<div
+ id="premiumStatus"
+ class="status">
+Checking premium status...
+</div>
+
+</section>
+
+
+<section class="card trend">
+
+<h3>
+🔥 Trending Now
+</h3>
+
+<div class="trenditem">
+<b>#APEXChallenge</b>
+<br>
+<span class="muted">18.4K posts</span>
+</div>
+
+<div class="trenditem">
+<b>#DailyLife</b>
+<br>
+<span class="muted">11.2K posts</span>
+</div>
+
+<div class="trenditem">
+<b>#APEXSounds</b>
+<br>
+<span class="muted">7.9K posts</span>
+</div>
+
+</section>
+
+
+<section class="card sidebox">
+
+<h3>
+People to follow
+</h3>
+
+<div class="person">
+<img src="https://i.pravatar.cc/100?img=49" alt="Michael">
+<b>Michael</b>
+<button onclick="follow(this)">Follow</button>
+</div>
+
+<div class="person">
+<img src="https://i.pravatar.cc/100?img=44" alt="Sarah">
+<b>Sarah</b>
+<button onclick="follow(this)">Follow</button>
+</div>
+
+<div class="person">
+<img src="https://i.pravatar.cc/100?img=33" alt="Emeka">
+<b>Emeka</b>
+<button onclick="follow(this)">Follow</button>
+</div>
+
+</section>
+
+</aside>
+
+</div>
+
+
+<nav class="mobile">
+
+<button>
+🏠
+<small>For You</small>
+</button>
+
+<button onclick="toast('Explore')">
+🔎
+<small>Explore</small>
+</button>
+
+<button onclick="openCreate()">
+＋
+<small>Create</small>
+</button>
+
+<button onclick="toast('Messages')">
+💬
+<small>Chat</small>
+</button>
+
+<button onclick="openProfile()">
+👤
+<small>Profile</small>
+</button>
+
+</nav>
+
+
+<!-- CREATE POST -->
+
+<div class="modal" id="modal">
+
+<div class="box">
+
+<button class="close" onclick="closeCreate()">×</button>
+
+<h2>Create on APEX</h2>
+
+<input
+ type="file"
+ id="mediaFile"
+ accept="image/*,video/*"
+ onchange="previewMedia(event)">
+
+<div class="camera" id="camera">
+
+<video
+ id="cameraVideo"
+ autoplay
+ playsinline>
+</video>
+
+</div>
+
+<div class="row2">
+
+<button class="tool" onclick="startCamera()">
+📷 Open Camera
+</button>
+
+<button class="tool" onclick="addFilter()">
+✨ Filter
+</button>
+
+<button class="tool" onclick="chooseSound()">
+🎵 Sound
+</button>
+
+</div>
+
+<select id="filter">
+
+<option value="none">Normal</option>
+<option value="warm">Warm</option>
+<option value="cool">Cool</option>
+<option value="mono">Black & White</option>
+<option value="bright">Bright</option>
+
+</select>
+
+<input
+ id="sound"
+ placeholder="Sound / music name">
+
+<textarea
+ id="postText"
+ rows="4"
+ placeholder="Tell people what is happening...">
+</textarea>
+
+<input
+ id="postImage"
+ placeholder="Optional image/video URL">
+
+<button
+ class="primary"
+ style="width:100%;margin-top:8px"
+ onclick="publish()">
+Post to APEX
+</button>
+
+</div>
+
+</div>
+
+
+<!-- PROFILE -->
+
+<div class="modal" id="profileModal">
+
+<div class="box">
+
+<button class="close" onclick="closeProfile()">×</button>
+
+<h2>👤 APEX Profile</h2>
+
+<input
+ id="profileName"
+ placeholder="Display name">
+
+<input
+ id="profileUsername"
+ placeholder="@username">
+
+<input
+ id="profileBio"
+ placeholder="Bio">
+
+<input
+ id="profileAvatar"
+ placeholder="Avatar image URL">
+
+<button
+ class="primary"
+ style="width:100%;margin-top:8px"
+ onclick="saveProfile()">
+Save Profile
+</button>
+
+<div
+ id="profileStatus"
+ class="status">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =====================================================
+   APEX SUPABASE CONFIGURATION
+   ===================================================== */
+
+const SUPABASE_URL =
+"https://myzhieghlnjckdqgoidg.supabase.co";
+
+/*
+ APEX PUBLIC PUBLISHABLE KEY
+
+ This is safe for a browser frontend.
+ NEVER put a service_role/secret key here.
+*/
+
+const SUPABASE_ANON_KEY =
+"sb_publishable_oMEr47Dj8lGm51yAuv-FEg_z_TAm3ON";
+
+const PAYSTACK_LINK =
+"https://paystack.shop/pay/kkof1e1670";
+
+
+/* =====================================================
+   SUPABASE CLIENT
+   ===================================================== */
+
+let sb = null;
+
+try{
+
+ if(window.supabase){
+
+  sb =
+   window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY,
+    {
+     auth:{
+      persistSession:true,
+      autoRefreshToken:true,
+      detectSessionInUrl:true
+     }
+    }
+   );
+
+ }
+
+}catch(error){
+
+ console.error(
+  "Supabase initialization error:",
+  error
+ );
+
+}
+
+
+/* =====================================================
+   DEMO POSTS
+   ===================================================== */
+
+const demoPosts=[
+
+{
+ id:"demo-1",
+ type:"video",
+ name:"Amaka Okafor",
+ username:"@amaka",
+ avatar:"https://i.pravatar.cc/100?img=32",
+ text:"Just enjoying my day 🌅 What are you doing today? #DailyLife",
+ media:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+ sound:"APEX Original Sound",
+ likes:342,
+ comments:[
+  "This is beautiful ❤️",
+  "APEX is looking good 🔥"
+ ],
+ following:false
+},
+
+{
+ id:"demo-2",
+ type:"video",
+ name:"Daniel Tech",
+ username:"@danieltech",
+ avatar:"https://i.pravatar.cc/100?img=13",
+ text:"Building something new today 💻🚀",
+ media:"https://www.w3schools.com/html/mov_bbb.mp4",
+ sound:"Future Tech",
+ likes:186,
+ comments:[
+  "Keep building! 🚀"
+ ],
+ following:false
+},
+
+{
+ id:"demo-3",
+ type:"image",
+ name:"Chika",
+ username:"@chika_vibes",
+ avatar:"https://i.pravatar.cc/100?img=47",
+ text:"Weekend vibes 😂🔥 Who else is outside?",
+ media:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1000&q=80",
+ sound:"Weekend Vibes",
+ likes:521,
+ comments:[],
+ following:false
+}
+
+];
+
+
+let posts=[...demoPosts];
+let nextId=10;
+let stream=null;
+let currentUser=null;
+
+
+/* =====================================================
+   HELPERS
+   ===================================================== */
+
+function esc(s){
+
+ return String(s ?? "")
+ .replace(
+  /[&<>"']/g,
+  m=>({
+   "&":"&amp;",
+   "<":"&lt;",
+   ">":"&gt;",
+   '"':"&quot;",
+   "'":"&#039;"
+  }[m])
+ );
+
+}
+
+
+function toast(message){
+
+ const t=
+ document.getElementById("toast");
+
+ t.textContent=message;
+ t.style.display="block";
+
+ clearTimeout(window.toastTimer);
+
+ window.toastTimer=
+ setTimeout(
+  ()=>{
+   t.style.display="none";
+  },
+  1900
+ );
+
+}
+
+
+function checkout(){
+
+ window.location.href=PAYSTACK_LINK;
+
+}
+
+
+/* =====================================================
+   AUTH STATUS
+   ===================================================== */
+
+function updateAuthStatus(){
+
+ const el=
+  document.getElementById("authStatus");
+
+ if(!el)return;
+
+ if(currentUser){
+
+  el.textContent=
+   "✓ Connected to APEX · Signed in";
+
+  el.style.color="#4ade80";
+
+ }else{
+
+  el.textContent=
+   "APEX connected · Sign in to save posts and profile data";
+
+  el.style.color="#9da2b1";
+
+ }
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+   ===================================================== */
+
+async function init(){
+
+ if(!sb){
+
+  document.getElementById(
+   "premiumStatus"
+  ).textContent=
+   "Supabase connection unavailable";
+
+  document.getElementById(
+   "premiumStatus"
+  ).className=
+   "status err";
+
+  updateAuthStatus();
+  renderFeed();
+
+  return;
+ }
+
+
+ try{
+
+  const {
+   data:{
+    session
+   }
+  }=
+  await sb.auth.getSession();
+
+  currentUser=
+   session?.user || null;
+
+  updateAuthStatus();
+
+  await loadProfile();
+  await loadPosts();
+  await checkPremium();
+
+
+  sb.auth.onAuthStateChange(
+   async (_event,session)=>{
+
+    currentUser=
+     session?.user || null;
+
+    updateAuthStatus();
+
+    await loadProfile();
+    await checkPremium();
