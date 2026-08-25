@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX — Live Your Moment</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#08090c;
+  color:#fff;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+
+.top{
+  height:62px;
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:0 18px;
+  background:#08090cdd;
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid #292c34;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:-1px;
+}
+.logo span{color:#ff5a1f}
+
+.tabs{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:25px;
+}
+.tabs button{
+  background:none;
+  color:#aaa;
+  padding:20px 3px;
+  font-weight:bold;
+}
+.tabs button.active{
+  color:#fff;
+  border-bottom:2px solid #fff;
+}
+
+.search{
+  margin-left:auto;
+  width:240px;
+}
+.search input{
+  width:100%;
+  background:#1d1f25;
+  border:1px solid #30323a;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:25px;
+  outline:none;
+}
+
+.top-icon{
+  width:39px;
+  height:39px;
+  border-radius:50%;
+  background:#1d1f25;
+  color:#fff;
+}
+
+.profile{
+  width:39px;
+  height:39px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.feed{
+  height:100vh;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  padding-top:62px;
+  scrollbar-width:none;
+}
+.feed::-webkit-scrollbar{display:none}
+
+.post{
+  height:calc(100vh - 62px);
+  min-height:580px;
+  position:relative;
+  scroll-snap-align:start;
+  display:flex;
+  justify-content:center;
+  background:#111;
+  overflow:hidden;
+}
+
+.post video,
+.post img{
+  width:100%;
+  max-width:720px;
+  height:100%;
+  object-fit:cover;
+}
+
+.post:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    transparent 45%,
+    rgba(0,0,0,.85)
+  );
+  pointer-events:none;
+}
+
+.info{
+  position:absolute;
+  z-index:5;
+  left:max(18px,calc(50% - 330px));
+  bottom:25px;
+  width:min(500px,70%);
+  text-shadow:0 2px 8px #000;
+}
+
+.username{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+.handle{
+  color:#ddd;
+  font-size:14px;
+  font-weight:normal;
+}
+.caption{
+  font-size:15px;
+  line-height:1.5;
+}
+.sound{
+  margin-top:10px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.actions{
+  position:absolute;
+  z-index:10;
+  right:max(12px,calc(50% - 350px));
+  bottom:25px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  align-items:center;
+}
+
+.creator{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid #fff;
+}
+
+.follow{
+  background:#ff5a1f;
+  color:#fff;
+  border-radius:20px;
+  padding:5px 9px;
+  font-size:11px;
+  font-weight:bold;
+  margin-top:-20px;
+}
+
+.action{
+  background:none;
+  color:#fff;
+  text-align:center;
+  text-shadow:0 2px 7px #000;
+}
+
+.circle{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:#171920dd;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+}
+
+.action b{
+  display:block;
+  font-size:11px;
+  margin-top:4px;
+}
+
+.liked{color:#ff5a1f!important}
+
+.create{
+  position:fixed;
+  z-index:60;
+  right:25px;
+  bottom:25px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:#ff5a1f;
+  color:#fff;
+  font-size:30px;
+  box-shadow:0 10px 30px #0008;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#000c;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+}
+
+.box{
+  width:min(560px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#15171c;
+  border:1px solid #333640;
+  border-radius:20px;
+  padding:20px;
+}
+
+.close{
+  float:right;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#292c33;
+  color:#fff;
+}
+
+.box h2{margin-bottom:15px}
+
+.box textarea,
+.box input,
+.box select{
+  width:100%;
+  background:#202229;
+  color:#fff;
+  border:1px solid #363944;
+  padding:12px;
+  border-radius:11px;
+  margin:6px 0;
+  outline:none;
+}
+
+.tools{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px 0;
+}
+
+.tool{
+  background:#292c33;
+  color:#fff;
+  padding:9px 12px;
+  border-radius:10px;
+}
+
+.primary{
+  width:100%;
+  background:#ff5a1f;
+  color:#fff;
+  padding:13px;
+  border-radius:11px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.preview{
+  width:100%;
+  max-height:280px;
+  object-fit:cover;
+  border-radius:12px;
+  display:none;
+  margin-top:8px;
+}
+
+.comments{
+  display:none;
+  flex-direction:column;
+  position:fixed;
+  z-index:120;
+  right:0;
+  top:0;
+  bottom:0;
+  width:min(420px,100%);
+  background:#15171c;
+  border-left:1px solid #333;
+}
+
+.comment-header{
+  padding:18px;
+  border-bottom:1px solid #333;
+  font-weight:bold;
+}
+
+.comment-list{
+  flex:1;
+  overflow:auto;
+  padding:15px;
+}
+
+.comment{
+  padding:11px 0;
+  border-bottom:1px solid #292c34;
+}
+
+.comment-input{
+  display:flex;
+  gap:7px;
+  padding:12px;
+}
+
+.comment-input input{
+  flex:1;
+  background:#22242b;
+  border:0;
+  color:#fff;
+  border-radius:20px;
+  padding:10px;
+}
+
+.comment-input button{
+  background:#ff5a1f;
+  color:#fff;
+  border-radius:20px;
+  padding:9px 14px;
+}
+
+.toast{
+  display:none;
+  position:fixed;
+  z-index:200;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#fff;
+  color:#111;
+  padding:11px 17px;
+  border-radius:25px;
+}
+
+.mobile{display:none}
+
+@media(max-width:700px){
+  .top{padding:0 10px}
+  .search{display:none}
+  .tabs{gap:15px}
+  .tabs button{font-size:13px}
+
+  .post{height:calc(100vh - 62px)}
+
+  .info{
+    left:14px;
+    bottom:18px;
+    width:72%;
+  }
+
+  .actions{
+    right:10px;
+    bottom:18px;
+  }
+
+  .create{
+    right:16px;
+    bottom:75px;
+  }
+
+  .mobile{
+    position:fixed;
+    display:flex;
+    z-index:55;
+    bottom:0;
+    left:0;
+    right:0;
+    height:60px;
+    background:#090a0d;
+    border-top:1px solid #292c34;
+    justify-content:space-around;
+    align-items:center;
+  }
+
+  .mobile button{
+    background:none;
+    color:#fff;
+    font-size:18px;
+  }
+
+  .mobile small{
+    display:block;
+    font-size:9px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+
+  <div class="logo">
+    <span>◆</span> APEX
+  </div>
+
+  <div class="tabs">
+
+    <button class="active"
+      onclick="changeFeed(this,'forYou')">
+      For You
+    </button>
+
+    <button
+      onclick="changeFeed(this,'following')">
+      Following
+    </button>
+
+    <button
+      onclick="toast('APEX LIVE is coming 🔴')">
+      LIVE
+    </button>
+
+  </div>
+
+  <div class="search">
+    <input
+      id="search"
+      placeholder="Search APEX"
+      oninput="searchPosts()">
+  </div>
+
+  <button
+    class="top-icon"
+    onclick="openAuth()">
+    ✉
+  </button>
+
+  <img
+    class="profile"
+    id="profileAvatar"
+    src="https://i.pravatar.cc/100?img=12">
+
+</header>
+
+<main class="feed" id="feed"></main>
+
+<button
+  class="create"
+  onclick="openCreate()">
+  ＋
+</button>
+
+<nav class="mobile">
+
+  <button onclick="scrollHome()">
+    ⌂
+    <small>Home</small>
+  </button>
+
+  <button onclick="toast('Discover opened 🔎')">
+    🔎
+    <small>Discover</small>
+  </button>
+
+  <button onclick="openCreate()">
+    ＋
+    <small>Create</small>
+  </button>
+
+  <button onclick="openAuth()">
+    ✉
+    <small>Inbox</small>
+  </button>
+
+  <button onclick="openAuth()">
+    👤
+    <small>Profile</small>
+  </button>
+
+</nav>
+
+<!-- CREATE POST -->
+
+<div class="modal" id="createModal">
+
+  <div class="box">
+
+    <button class="close" onclick="closeCreate()">×</button>
+
+    <h2>Create your APEX moment</h2>
+
+    <input
+      type="file"
+      id="file"
+      accept="video/*,image/*"
+      onchange="previewFile(event)">
+
+    <video
+      id="videoPreview"
+      class="preview"
+      controls>
+    </video>
+
+    <img
+      id="imagePreview"
+      class="preview">
+
+    <div class="tools">
+
+      <button class="tool"
+        onclick="openCamera()">
+        📷 Camera
+      </button>
+
+      <button class="tool"
+        onclick="toast('Sound selected 🎵')">
+        🎵 Sound
+      </button>
+
+      <button class="tool"
+        onclick="toast('Effects opened ✨')">
+        ✨ Effects
+      </button>
+
+      <button class="tool"
+        onclick="toast('Text tool selected')">
+        Aa Text
+      </button>
+
+    </div>
+
+    <select id="filter">
+      <option>Original</option>
+      <option>Warm Glow</option>
+      <option>Cool Night</option>
+      <option>Black & White</option>
+      <option>Bright</option>
+    </select>
+
+    <input
+      id="sound"
+      placeholder="Sound / music name">
+
+    <textarea
+      id="caption"
+      rows="4"
+      placeholder="Describe your moment...">
+    </textarea>
+
+    <button
+      class="primary"
+      onclick="publishPost()">
+      Post to APEX
+    </button>
+
+  </div>
+
+</div>
+
+<!-- AUTH -->
+
+<div class="modal" id="authModal">
+
+  <div class="box">
+
+    <button class="close" onclick="closeAuth()">×</button>
+
+    <h2 id="authTitle">Join APEX</h2>
+
+    <p id="authMessage"
+      style="color:#aaa;margin-bottom:12px">
+      Create your APEX account.
+    </p>
+
+    <input
+      id="authName"
+      type="text"
+      placeholder="Display name">
+
+    <input
+      id="authUsername"
+      type="text"
+      placeholder="Username">
+
+    <input
+      id="authEmail"
+      type="email"
+      placeholder="Email address">
+
+    <input
+      id="authPassword"
+      type="password"
+      placeholder="Password">
+
+    <button
+      class="primary"
+      onclick="handleAuth()"
+      id="authButton">
+      Create Account
+    </button>
+
+    <button
+      class="tool"
+      style="width:100%;margin-top:8px"
+      onclick="toggleAuthMode()"
+      id="authSwitch">
+      Already have an account? Log in
+    </button>
+
+    <button
+      class="tool"
+      style="width:100%;margin-top:8px"
+      onclick="logout()">
+      Sign out
+    </button>
+
+  </div>
+
+</div>
+
+<!-- COMMENTS -->
+
+<div class="comments" id="commentsPanel">
+
+  <div class="comment-header">
+
+    Comments
+
+    <button
+      class="close"
+      onclick="closeComments()">
+      ×
+    </button>
+
+  </div>
+
+  <div
+    class="comment-list"
+    id="commentList">
+  </div>
+
+  <div class="comment-input">
+
+    <input
+      id="commentInput"
+      placeholder="Add a comment..."
+      onkeydown="if(event.key==='Enter')sendComment()">
+
+    <button onclick="sendComment()">
+      Send
+    </button>
+
+  </div>
+
+</div>
+
+<div class="toast" id="toastBox"></div>
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://myzhieghlnjckdqgoidg.supabase.co";
+
+const SUPABASE_ANON_KEY =
+"sb_publishable_oMEr47Dj8lGm51yAuv-FEg_z_TAm3ON";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+/* =========================
+   PAYSTACK
+========================= */
+
+const PAYSTACK_LINK =
+"https://paystack.shop/pay/kkof1e1670";
+
+
+/* =========================
+   APEX POSTS
+========================= */
+
+let posts = [
+
+{
+  id:1,
+  name:"Amaka",
+  handle:"@amaka",
+  avatar:"https://i.pravatar.cc/100?img=32",
+
+  caption:
+  "A little moment from my day 🌅 What is happening in your world?",
+
+  media:
+  "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+
+  video:true,
+
+  sound:"APEX Original • Daily Life",
+
+  likes:12400,
+
+  comments:[
+    "Beautiful ❤️",
+    "APEX is looking good 🔥"
+  ],
+
+  following:false
+},
+
+{
+  id:2,
+  name:"Daniel Tech",
+  handle:"@danieltech",
+  avatar:"https://i.pravatar.cc/100?img=13",
+
+  caption:
+  "Building something new today 💻🚀",
+
+  media:
+  "https://www.w3schools.com/html/mov_bbb.mp4",
+
+  video:true,
+
+  sound:"Future Tech",
+
+  likes:8600,
+
+  comments:[
+    "Keep going!",
+    "🔥🔥🔥"
+  ],
+
+  following:false
+},
+
+{
+  id:3,
+  name:"Chika Vibes",
+  handle:"@chika_vibes",
+  avatar:"https://i.pravatar.cc/100?img=47",
+
+  caption:
+  "Weekend energy 😂✨ #DailyLife #APEX",
+
+  media:
+  "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1000&q=80",
+
+  video:false,
+
+  sound:"Weekend Vibes",
+
+  likes:23100,
+
+  comments:[
+    "Love this!"
+  ],
+
+  following:false
+}
+
+];
+
+let currentPost = null;
+let currentUser = null;
+let authLoginMode = false;
+let nextId = 20;
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function escapeHTML(value){
+
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+function findPost(id){
+
+  return posts.find(
+    post => String(post.id) === String(id)
+  );
+
+}
+
+function formatNumber(number){
+
+  number = Number(number || 0);
+
+  if(number >= 1000000){
+    return (number / 1000000).toFixed(1) + "M";
+  }
+
+  if(number >= 1000){
+    return (number / 1000).toFixed(1) + "K";
+  }
+
+  return number;
+
+}
+
+
+/* =========================
+   RENDER FEED
+========================= */
+
+function renderFeed(list = posts){
+
+  const feed =
+    document.getElementById("feed");
+
+  feed.innerHTML = "";
+
+  if(!list.length){
+
+    feed.innerHTML = `
+      <section class="post">
+        <div class="info">
+          <div class="username">
+            No posts yet
+          </div>
+          <div class="caption">
+            Be the first creator on APEX.
+            Tap + to create a post.
+          </div>
+        </div>
+      </section>
+    `;
+
+    return;
+  }
+
+  list.forEach(post => {
+
+    const element =
+      document.createElement("section");
+
+    element.className = "post";
+
+    let mediaHTML;
+
+    if(post.video){
+
+      mediaHTML = `
+        <video
+          src="${escapeHTML(post.media)}"
+          autoplay
+          loop
+          muted
+          playsinline
+          controls
+          preload="auto">
+        </video>
+      `;
+
+    }else{
+
+      mediaHTML = `
+        <img
+          src="${escapeHTML(post.media)}"
+          alt="APEX post">
+      `;
+
+    }
+
+    element.innerHTML = `
+
+      ${media
