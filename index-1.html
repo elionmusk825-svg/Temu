@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Investment</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(0, 174, 255, .18), transparent 30%),
+        radial-gradient(circle at 85% 10%, rgba(116, 64, 255, .16), transparent 30%),
+        linear-gradient(135deg, #050914, #071426 55%, #03060c);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background grid */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .15;
+      background-image:
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size: 50px 50px;
+      mask-image: linear-gradient(to bottom, black, transparent);
+    }
+
+    .glow {
+      position: fixed;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .25;
+      pointer-events: none;
+    }
+
+    .glow.one {
+      background: #00aaff;
+      top: 120px;
+      left: -100px;
+    }
+
+    .glow.two {
+      background: #754cff;
+      right: -100px;
+      top: 450px;
+    }
+
+    header {
+      width: 100%;
+      padding: 20px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 5;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: #16baff;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    nav a {
+      color: #b8c5d8;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: #fff;
+    }
+
+    .login {
+      border: 1px solid rgba(255,255,255,.15);
+      padding: 10px 18px;
+      border-radius: 10px;
+    }
+
+    .hero {
+      width: 86%;
+      max-width: 1200px;
+      margin: auto;
+      min-height: 600px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      align-items: center;
+      gap: 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 1.02;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 span {
+      color: #17baff;
+      text-shadow: 0 0 35px rgba(23,186,255,.35);
+    }
+
+    .hero p {
+      color: #9eacc0;
+      max-width: 600px;
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 25px;
+      border-radius: 10px;
+      border: none;
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #00aef5, #0879ff);
+      color: white;
+      box-shadow: 0 0 30px rgba(0,160,255,.25);
+    }
+
+    .secondary {
+      color: white;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.04);
+    }
+
+    /* Crypto visual */
+    .crypto-scene {
+      position: relative;
+      height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .coin {
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 90px;
+      font-weight: bold;
+      color: #fff;
+      background:
+        radial-gradient(circle at 35% 30%, #70dfff, #078cff 42%, #063b80 75%);
+      border: 7px solid rgba(255,255,255,.25);
+      box-shadow:
+        0 0 40px rgba(0,169,255,.55),
+        0 0 120px rgba(0,119,255,.2),
+        inset 0 0 30px rgba(255,255,255,.25);
+      animation: float 4s ease-in-out infinite;
+      z-index: 3;
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1px solid rgba(0,183,255,.25);
+      border-radius: 50%;
+      transform: rotate(-20deg);
+    }
+
+    .orbit.one {
+      width: 350px;
+      height: 150px;
+    }
+
+    .orbit.two {
+      width: 380px;
+      height: 190px;
+      transform: rotate(35deg);
+    }
+
+    .orbit.three {
+      width: 430px;
+      height: 250px;
+      transform: rotate(70deg);
+    }
+
+    .mini-coin {
+      position: absolute;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg,#243cff,#751cff);
+      box-shadow: 0 0 25px rgba(91,75,255,.5);
+      font-weight: bold;
+    }
+
+    .mini-coin.a {
+      top: 50px;
+      right: 70px;
+    }
+
+    .mini-coin.b {
+      bottom: 55px;
+      left: 50px;
+    }
+
+    .mini-coin.c {
+      top: 150px;
+      left: 10px;
+      background: linear-gradient(145deg,#ff9b00,#ff4500);
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* Market cards */
+    .market {
+      width: 86%;
+      max-width: 1200px;
+      margin: 10px auto 80px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .card {
+      background: rgba(10,22,40,.72);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 18px;
+      padding: 22px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.2);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      color: #aebcd0;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .price {
+      font-size: 27px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .up {
+      color: #27e39b;
+      font-size: 13px;
+    }
+
+    .chart {
+      height: 55px;
+      margin-top: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Investment section */
+    .section {
+      width: 86%;
+      max-width: 1200px;
+      margin: 0 auto 80px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .section-title h2 {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    .section-title p {
+      color: #8e9db1;
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 20px;
+    }
+
+    .plan {
+      padding: 28px;
+      border-radius: 20px;
+      background: linear-gradient(
+        145deg,
+        rgba(18,38,65,.85),
+        rgba(7,16,29,.8)
+      );
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .plan.featured {
+      border-color: rgba(0,177,255,.5);
+      box-shadow: 0 0 40px rgba(0,150,255,.1);
+    }
+
+    .plan h3 {
+      margin-bottom: 15px;
+    }
+
+    .percent {
+      font-size: 42px;
+      font-weight: 800;
+      color: #17baff;
+    }
+
+    .plan p {
+      color: #9aa9bd;
+      line-height: 1.6;
+      margin: 15px 0 25px;
+    }
+
+    .plan button {
+      width: 100%;
+      padding: 13px;
+      border: 0;
+      border-radius: 9px;
+      background: #0c9de9;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    footer {
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,.07);
+      color: #68788d;
+      position: relative;
+      z-index: 3;
+    }
+
+    @media(max-width: 850px) {
+      nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 50px;
+        text-align: center;
+      }
+
+      .hero p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .buttons {
+        justify-content: center;
+      }
+
+      .crypto-scene {
+        height: 350px;
+      }
+
+      .market,
+      .plans {
+        grid-template-columns: 1fr;
+      }
+
+      .coin {
+        width: 150px;
+        height: 150px;
+        font-size: 70px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="glow one"></div>
+  <div class="glow two"></div>
+
+  <header>
+    <div class="logo">APEX <span>INVESTMENT</span></div>
+
+    <nav>
+      <a href="#">Home</a>
+      <a href="#markets">Markets</a>
+      <a href="#plans">Investment</a>
+      <a href="#about">About</a>
+      <a class="login" href="#">Login</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+
+      <div>
+        <h1>
+          Invest in the
+          <span>Digital Future.</span>
+        </h1>
+
+        <p>
+          A modern digital-asset investment interface designed
+          for presenting cryptocurrency markets, investment plans,
+          portfolio information and platform features.
+        </p>
+
+        <div class="buttons">
+          <a href="#plans" class="btn primary">Explore Investments</a>
+          <a href="#markets" class="btn secondary">View Markets</a>
+        </div>
+      </div>
+
+      <div class="crypto-scene">
+
+        <div class="orbit one"></div>
+        <div class="orbit two"></div>
+        <div class="orbit three"></div>
+
+        <div class="mini-coin a">Ξ</div>
+        <div class="mini-coin b">₿</div>
+        <div class="mini-coin c">₿</div>
+
+        <div class="coin">₿</div>
+
+      </div>
+
+    </section>
+
+    <section class="market" id="markets">
+
+      <div class="card">
+        <div class="card-top">
+          <span>Bitcoin</span>
+          <span>BTC</span>
+        </div>
+        <div class="price">$68,421.20</div>
+        <div class="up">▲ 3.42%</div>
+
+        <div class="chart">
+          <svg viewBox="0 0 300 60" preserveAspectRatio="none">
+            <polyline
+              points="0,50 30,45 55,48 80,30 110,37 135,20 165,27 190,10 215,25 240,15 270,20 300,5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span>Ethereum</span>
+          <span>ETH</span>
+        </div>
+        <div class="price">$3,482.17</div>
+        <div class="up">▲ 2.18%</div>
+
+        <div class="chart">
+          <svg viewBox="0 0 300 60" preserveAspectRatio="none">
+            <polyline
+              points="0,45 35,40 60,50 90,28 120,35 150,15 180,25 210,18 240,30 270,12 300,8"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span>USDT</span>
+          <span>USDT</span>
+        </div>
+        <div class="price">$1.00</div>
+        <div class="up">▲ 0.02%</div>
+
+        <div class="chart">
+          <svg viewBox="0 0 300 60" preserveAspectRatio="none">
+            <polyline
+              points="0,30 40,28 80,31 120,29 160,30 200,27 240,29 270,28 300,29"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"/>
+          </svg>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="section" id="plans">
+
+      <div class="section-title">
+        <h2>Investment Plans</h2>
+        <p>Choose a plan that fits your investment strategy.</p>
+      </div>
+
+      <div class="plans">
+
+        <div class="plan">
+          <h3>Starter</h3>
+          <div class="percent">5%</div>
+          <p>
+            Entry-level investment plan with a simple
+            portfolio presentation.
+          </p>
+          <button onclick="selectPlan('Starter')">
+            Select Plan
+          </button>
+        </div>
+
+        <div class="plan featured">
+          <h3>Professional</h3>
+          <div class="percent">12%</div>
+          <p>
+            A premium investment option with advanced
+            portfolio and market features.
+          </p>
+          <button onclick="selectPlan('Professional')">
+            Select Plan
+          </button>
+        </div>
+
+        <div class="plan">
+          <h3>Premium</h3>
+          <div class="percent">20%</div>
+          <p>
+            Designed for users looking for a higher-tier
+            investment experience.
+          </p>
+          <button onclick="selectPlan('Premium')">
+            Select Plan
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    © 2026 Apex Investment. All rights reserved.
+  </footer>
+
+  <script>
+    function selectPlan(plan) {
+      alert(
+        plan +
+        " selected. Connect this button to your legitimate payment/investment workflow."
+      );
+    }
+  </script>
+
+</body>
+</html>
